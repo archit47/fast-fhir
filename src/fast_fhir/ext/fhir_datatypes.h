@@ -6,13 +6,13 @@
 #include <cjson/cJSON.h>
 
 // Forward declarations
-typedef struct FHIRElement FHIRElement;
-typedef struct FHIRExtension FHIRExtension;
+struct FHIRElement;
+struct FHIRExtension;
 
 // Base FHIR Element structure
 typedef struct FHIRElement {
     char* id;
-    FHIRExtension** extensions;
+    struct FHIRExtension** extensions;
     size_t extension_count;
 } FHIRElement;
 

@@ -1,9 +1,11 @@
 """Setup script for Fast-FHIR with high-performance C extensions."""
 
-from setuptools import setup, Extension
+from setuptools import setup, Extension, find_packages
 import pkgconfig
 
 # Get cJSON library flags
+import platform
+
 try:
     cjson_flags = pkgconfig.parse('libcjson')
     include_dirs = cjson_flags['include_dirs']
@@ -11,9 +13,26 @@ try:
     libraries = cjson_flags['libraries']
 except:
     # Fallback if pkg-config not available
-    include_dirs = ['/usr/local/include', '/opt/homebrew/include']
-    library_dirs = ['/usr/local/lib', '/opt/homebrew/lib']
+    if platform.system() == 'Darwin':  # macOS
+        # Try both Intel and Apple Silicon paths
+        include_dirs = ['/usr/local/include', '/opt/homebrew/include']
+        library_dirs = ['/usr/local/lib', '/opt/homebrew/lib']
+    else:
+        include_dirs = ['/usr/local/include']
+        library_dirs = ['/usr/local/lib']
     libraries = ['cjson']
+
+# Additional compile args for better compatibility
+extra_compile_args = ['-O3', '-std=c99']
+if platform.system() == 'Darwin':
+    # Fix macOS universal build issues
+    extra_compile_args.extend(['-Wno-error=unused-command-line-argument-hard-error-in-future'])
+    # Don't force architecture - let Python decide
+    import sysconfig
+    if 'arm64' in sysconfig.get_platform():
+        extra_compile_args.extend(['-arch', 'arm64'])
+    elif 'x86_64' in sysconfig.get_platform():
+        extra_compile_args.extend(['-arch', 'x86_64'])
 
 # Define the C extensions
 fhir_parser_c = Extension(
@@ -22,7 +41,7 @@ fhir_parser_c = Extension(
     include_dirs=include_dirs,
     library_dirs=library_dirs,
     libraries=libraries,
-    extra_compile_args=['-O3', '-std=c99']
+    extra_compile_args=extra_compile_args
 )
 
 fhir_datatypes_c = Extension(
@@ -34,7 +53,7 @@ fhir_datatypes_c = Extension(
     include_dirs=include_dirs,
     library_dirs=library_dirs,
     libraries=libraries,
-    extra_compile_args=['-O3', '-std=c99']
+    extra_compile_args=extra_compile_args
 )
 
 fhir_foundation_c = Extension(
@@ -47,7 +66,7 @@ fhir_foundation_c = Extension(
     include_dirs=include_dirs,
     library_dirs=library_dirs,
     libraries=libraries,
-    extra_compile_args=['-O3', '-std=c99']
+    extra_compile_args=extra_compile_args
 )
 
 fhir_clinical_c = Extension(
@@ -61,7 +80,7 @@ fhir_clinical_c = Extension(
     include_dirs=include_dirs,
     library_dirs=library_dirs,
     libraries=libraries,
-    extra_compile_args=['-O3', '-std=c99']
+    extra_compile_args=extra_compile_args
 )
 
 fhir_medication_c = Extension(
@@ -75,7 +94,7 @@ fhir_medication_c = Extension(
     include_dirs=include_dirs,
     library_dirs=library_dirs,
     libraries=libraries,
-    extra_compile_args=['-O3', '-std=c99']
+    extra_compile_args=extra_compile_args
 )
 
 fhir_workflow_c = Extension(
@@ -89,7 +108,7 @@ fhir_workflow_c = Extension(
     include_dirs=include_dirs,
     library_dirs=library_dirs,
     libraries=libraries,
-    extra_compile_args=['-O3', '-std=c99']
+    extra_compile_args=extra_compile_args
 )
 
 fhir_specialized_c = Extension(
@@ -103,7 +122,7 @@ fhir_specialized_c = Extension(
     include_dirs=include_dirs,
     library_dirs=library_dirs,
     libraries=libraries,
-    extra_compile_args=['-O3', '-std=c99']
+    extra_compile_args=extra_compile_args
 )
 
 fhir_new_resources_c = Extension(
@@ -117,10 +136,12 @@ fhir_new_resources_c = Extension(
     include_dirs=include_dirs,
     library_dirs=library_dirs,
     libraries=libraries,
-    extra_compile_args=['-O3', '-std=c99']
+    extra_compile_args=extra_compile_args
 )
 
 setup(
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
     ext_modules=[
         fhir_parser_c, 
         fhir_datatypes_c, 
@@ -131,4 +152,8 @@ setup(
         fhir_specialized_c,
         fhir_new_resources_c
     ],
+    package_data={
+        "fast_fhir": ["ext/*.c", "ext/*.h"],
+    },
+    include_package_data=True,
 )

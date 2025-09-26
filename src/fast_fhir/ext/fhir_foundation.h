@@ -7,8 +7,18 @@
 #include <cjson/cJSON.h>
 
 // Forward declarations
-typedef struct FHIRResource FHIRResource;
-typedef struct FHIRDomainResource FHIRDomainResource;
+struct FHIRResource;
+struct FHIRDomainResource;
+struct FHIRUsageContext;
+struct FHIRSignature;
+struct FHIRTask;
+struct FHIRCodeSystem;
+
+// Typedef declarations for forward-declared structs
+typedef struct FHIRUsageContext FHIRUsageContext;
+typedef struct FHIRSignature FHIRSignature;
+typedef struct FHIRTask FHIRTask;
+typedef struct FHIRCodeSystem FHIRCodeSystem;
 
 // Base Resource structure
 typedef struct FHIRResource {
@@ -24,7 +34,7 @@ typedef struct FHIRResource {
 typedef struct FHIRDomainResource {
     FHIRResource resource;
     FHIRNarrative* text;
-    FHIRResource** contained;
+    struct FHIRResource** contained;
     size_t contained_count;
     FHIRExtension** extension;
     size_t extension_count;
@@ -482,7 +492,7 @@ cJSON* fhir_organization_to_json(const FHIROrganization* organization);
 cJSON* fhir_location_to_json(const FHIRLocation* location);
 cJSON* fhir_healthcare_service_to_json(const FHIRHealthcareService* service);
 cJSON* fhir_endpoint_to_json(const FHIREndpoint* endpoint);
-fhir_related_person_to_json(const FHIRRelatedPerson* related_person);
+cJSON* fhir_related_person_to_json(const FHIRRelatedPerson* related_person);
 cJSON* fhir_person_to_json(const FHIRPerson* person);
 cJSON* fhir_group_to_json(const FHIRGroup* group);
 
@@ -509,9 +519,7 @@ bool fhir_organization_is_active(const FHIROrganization* organization);
 const char* fhir_get_resource_type(const FHIRResource* resource);
 bool fhir_is_foundation_resource(const char* resource_type);
 
-#endif // FHIR_FOUNDATION_H
-// Add
-itional Foundation Resource Types
+// Additional Foundation Resource Types
 
 // CodeSystem Resource
 typedef struct {
@@ -986,3 +994,5 @@ bool fhir_validate_endpoint(const FHIREndpoint* endpoint);
 // Additional resource type checking
 bool fhir_is_workflow_foundation_resource(const char* resource_type);
 bool fhir_is_infrastructure_foundation_resource(const char* resource_type);
+#endif
+ // FHIR_FOUNDATION_H

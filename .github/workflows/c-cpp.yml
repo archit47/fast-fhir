@@ -44,7 +44,7 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install setuptools wheel pkgconfig
+        pip install "setuptools>=61.0" wheel pkgconfig
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     
     - name: Build C extensions

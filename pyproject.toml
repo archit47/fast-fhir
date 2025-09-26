@@ -7,7 +7,7 @@ name = "fast-fhir"
 version = "0.1.0"
 description = "High-performance FHIR R5 parser and processor with C extensions"
 authors = [{name = "Fast-FHIR", email = "fast-fhir@example.com"}]
-license = {text = "MIT"}
+license = "MIT"
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [

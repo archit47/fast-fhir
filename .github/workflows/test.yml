@@ -1,0 +1,64 @@
+name: Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install system dependencies (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libcjson-dev
+    
+    - name: Install system dependencies (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install cjson
+    
+    - name: Install system dependencies (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        # Windows setup for cjson would go here
+        echo "Windows C extension build not configured yet"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+      shell: bash
+    
+    - name: Test package structure
+      run: |
+        PYTHONPATH=src python test_package.py
+      shell: bash
+    
+    - name: Run tests
+      run: |
+        if [ -d tests ]; then pytest tests/ -v; fi
+      shell: bash
+    
+    - name: Test C extensions build (Unix only)
+      if: matrix.os != 'windows-latest'
+      run: |
+        python setup.py build_ext --inplace || echo "C extensions build failed (optional)"
+      shell: bash

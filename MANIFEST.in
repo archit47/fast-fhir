@@ -1,0 +1,10 @@
+include README.md
+include LICENSE
+include requirements.txt
+include requirements-dev.txt
+recursive-include src/fast_fhir/ext *.c *.h
+recursive-include src/fast_fhir *.py
+recursive-include tests *.py
+recursive-include examples *.py *.json
+include pyproject.toml
+include setup.py

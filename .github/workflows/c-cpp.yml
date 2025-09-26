@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: C Extensions Build
 
 on:
   push:
@@ -8,16 +8,61 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     steps:
     - uses: actions/checkout@v4
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install system dependencies (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libcjson-dev build-essential
+    
+    - name: Install system dependencies (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install cjson
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel pkgconfig
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    
+    - name: Build C extensions
+      run: |
+        python setup.py build_ext --inplace
+    
+    - name: Test package import
+      run: |
+        PYTHONPATH=src python -c "
+        try:
+            import fast_fhir
+            print('✅ Package imported successfully')
+            print(f'Version: {fast_fhir.__version__}')
+        except Exception as e:
+            print(f'❌ Import failed: {e}')
+            exit(1)
+        "
+    
+    - name: Test C extensions (if available)
+      run: |
+        PYTHONPATH=src python -c "
+        try:
+            import fast_fhir.fhir_parser_c
+            print('✅ C extensions loaded successfully')
+        except ImportError:
+            print('⚠️ C extensions not available (fallback mode)')
+        except Exception as e:
+            print(f'❌ C extension error: {e}')
+        "

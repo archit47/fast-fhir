@@ -2,9 +2,9 @@ name: Test
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   test:
@@ -26,7 +26,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
-        sudo apt-get install -y libcjson-dev
+        sudo apt-get install -y libcjson-dev build-essential pkg-config python3-dev
     
     - name: Install system dependencies (macOS)
       if: matrix.os == 'macos-latest'
@@ -49,7 +49,7 @@ jobs:
     
     - name: Test package structure
       run: |
-        PYTHONPATH=src python test_package.py
+        python scripts/test_config.py
       shell: bash
     
     - name: Run tests

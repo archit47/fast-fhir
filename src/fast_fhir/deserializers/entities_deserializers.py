@@ -7,11 +7,19 @@ import json
 from typing import Union, Dict, Any, Optional, Type, TypeVar
 from datetime import datetime, date
 
-from .pydantic_entities import (
-    HAS_PYDANTIC,
-    OrganizationModel, LocationModel, HealthcareServiceModel, EndpointModel,
-    DeviceModel, SubstanceModel, OrganizationAffiliationModel
-)
+try:
+    from .pydantic_entities import (
+        HAS_PYDANTIC,
+        OrganizationModel, LocationModel, HealthcareServiceModel, EndpointModel,
+        DeviceModel, SubstanceModel, OrganizationAffiliationModel
+    )
+    PYDANTIC_ENTITIES_MODELS_AVAILABLE = True
+except ImportError as e:
+    # Pydantic models not available (version incompatibility or missing)
+    HAS_PYDANTIC = False
+    PYDANTIC_ENTITIES_MODELS_AVAILABLE = False
+    OrganizationModel = LocationModel = HealthcareServiceModel = None
+    EndpointModel = DeviceModel = SubstanceModel = OrganizationAffiliationModel = None
 
 # Import the actual FHIR resource classes
 try:

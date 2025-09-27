@@ -7,11 +7,19 @@ import json
 from typing import Union, Dict, Any, Optional, Type, TypeVar
 from datetime import datetime
 
-from .pydantic_care_provision import (
-    HAS_PYDANTIC,
-    CarePlanModel, CareTeamModel, GoalModel, ServiceRequestModel,
-    NutritionOrderModel, RiskAssessmentModel, VisionPrescriptionModel
-)
+try:
+    from .pydantic_care_provision import (
+        HAS_PYDANTIC,
+        CarePlanModel, CareTeamModel, GoalModel, ServiceRequestModel,
+        NutritionOrderModel, RiskAssessmentModel, VisionPrescriptionModel
+    )
+    PYDANTIC_CARE_PROVISION_MODELS_AVAILABLE = True
+except ImportError as e:
+    # Pydantic models not available (version incompatibility or missing)
+    HAS_PYDANTIC = False
+    PYDANTIC_CARE_PROVISION_MODELS_AVAILABLE = False
+    CarePlanModel = CareTeamModel = GoalModel = ServiceRequestModel = None
+    NutritionOrderModel = RiskAssessmentModel = VisionPrescriptionModel = None
 
 # Import the actual FHIR resource classes
 from ..resources.care_plan import CarePlan, CarePlanStatus, CarePlanIntent, CarePlanActivity, CarePlanActivityDetail

@@ -22,47 +22,62 @@ Usage:
 """
 
 # Import care provision deserializer functionality
-from .deserializers import (
-    FHIRCareProvisionDeserializer,
-    FHIRDeserializationError,
-    deserialize_care_provision_resource,
-    deserialize_care_plan,
-    deserialize_care_team,
-    deserialize_goal,
-    deserialize_service_request,
-    deserialize_risk_assessment,
-    deserialize_vision_prescription,
-    deserialize_nutrition_order
-)
+try:
+    from .deserializers import (
+        FHIRCareProvisionDeserializer,
+        FHIRDeserializationError,
+        deserialize_care_provision_resource,
+        deserialize_care_plan,
+        deserialize_care_team,
+        deserialize_goal,
+        deserialize_service_request,
+        deserialize_risk_assessment,
+        deserialize_vision_prescription,
+        deserialize_nutrition_order
+    )
+    CARE_PROVISION_DESERIALIZERS_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Care provision deserializers not available: {e}")
+    CARE_PROVISION_DESERIALIZERS_AVAILABLE = False
 
 # Import foundation deserializer functionality
-from .foundation_deserializers import (
-    FHIRFoundationDeserializer,
-    FHIRFoundationDeserializationError,
-    deserialize_patient,
-    deserialize_practitioner,
-    deserialize_practitioner_role,
-    deserialize_encounter,
-    deserialize_person,
-    deserialize_related_person,
-    deserialize_group
-)
+try:
+    from .foundation_deserializers import (
+        FHIRFoundationDeserializer,
+        FHIRFoundationDeserializationError,
+        deserialize_patient,
+        deserialize_practitioner,
+        deserialize_practitioner_role,
+        deserialize_encounter,
+        deserialize_person,
+        deserialize_related_person,
+        deserialize_group
+    )
+    FOUNDATION_DESERIALIZERS_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Foundation deserializers not available: {e}")
+    FOUNDATION_DESERIALIZERS_AVAILABLE = False
 
 # Import entities deserializer functionality
-from .entities_deserializers import (
-    FHIREntitiesDeserializer,
-    FHIREntitiesDeserializationError,
-    deserialize_organization,
-    deserialize_location,
-    deserialize_healthcare_service,
-    deserialize_endpoint,
-    deserialize_device,
-    deserialize_substance,
-    deserialize_organization_affiliation,
-    deserialize_biologically_derived_product,
-    deserialize_nutrition_product,
-    deserialize_device_metric
-)
+try:
+    from .entities_deserializers import (
+        FHIREntitiesDeserializer,
+        FHIREntitiesDeserializationError,
+        deserialize_organization,
+        deserialize_location,
+        deserialize_healthcare_service,
+        deserialize_endpoint,
+        deserialize_device,
+        deserialize_substance,
+        deserialize_organization_affiliation,
+        deserialize_biologically_derived_product,
+        deserialize_nutrition_product,
+        deserialize_device_metric
+    )
+    ENTITIES_DESERIALIZERS_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Entities deserializers not available: {e}")
+    ENTITIES_DESERIALIZERS_AVAILABLE = False
 
 # Import Pydantic models for care provision resources
 try:

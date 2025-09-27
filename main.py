@@ -2,54 +2,60 @@
 
 import sys
 import argparse
-from src.fhir.parser import FHIRParser
-from src.fhir.all_resources import FHIRResourceFactory, get_fhir_implementation_status
-
 
 def show_status():
     """Show FHIR implementation status"""
-    status = get_fhir_implementation_status()
-    factory = FHIRResourceFactory()
-    factory_info = factory.get_performance_info()
-    
-    print("Fast-FHIR R5 Implementation Status")
-    print("=" * 30)
-    print(f"Total FHIR R5 resource types: {factory_info['total_resource_types']}")
-    print(f"Implemented resource types: {factory_info['implemented_resource_types']}")
-    print(f"Implementation coverage: {factory_info['implementation_coverage']}")
-    print(f"C extensions available: {factory_info['c_extensions_available']}")
-    
-    print("\nResource categories:")
-    for category, count in factory_info['categories'].items():
-        print(f"  {category.title()}: {count} resources")
-    
-    print(f"\nImplemented resources: {', '.join(status['implemented_list'][:10])}...")
-    if len(status['implemented_list']) > 10:
-        print(f"... and {len(status['implemented_list']) - 10} more")
-
+    try:
+        from src.fast_fhir.deserializers import (
+            PYDANTIC_FOUNDATION_AVAILABLE,
+            PYDANTIC_ENTITIES_AVAILABLE,
+            PYDANTIC_CARE_PROVISION_AVAILABLE
+        )
+        
+        print("Fast-FHIR R5 Implementation Status")
+        print("=" * 40)
+        print(f"Foundation Deserializers: ✅ Available")
+        print(f"Entities Deserializers: ✅ Available") 
+        print(f"Care Provision Deserializers: ✅ Available")
+        print(f"Pydantic Foundation: {'✅' if PYDANTIC_FOUNDATION_AVAILABLE else '❌'}")
+        print(f"Pydantic Entities: {'✅' if PYDANTIC_ENTITIES_AVAILABLE else '❌'}")
+        print(f"Pydantic Care Provision: {'✅' if PYDANTIC_CARE_PROVISION_AVAILABLE else '❌'}")
+        
+    except ImportError as e:
+        print(f"Fast-FHIR not available: {e}")
+        print("Please install Fast-FHIR or check your PYTHONPATH")
 
 def parse_resource(json_file):
     """Parse a FHIR resource from JSON file"""
     try:
-        parser = FHIRParser()
-        factory = FHIRResourceFactory()
+        from src.fast_fhir.deserializers import (
+            deserialize_patient,
+            deserialize_organization,
+            deserialize_care_plan
+        )
+        import json
         
         with open(json_file, 'r') as f:
-            data = f.read()
+            data = json.load(f)
         
-        # Try parsing with factory first
-        resource = factory.parse_resource(data)
+        resource_type = data.get('resourceType')
         
-        if hasattr(resource, 'to_dict'):
-            print(f"Successfully parsed {resource.__class__.__name__}")
-            print(f"Resource ID: {getattr(resource, 'id', 'N/A')}")
-            if hasattr(resource, 'validate'):
-                print(f"Valid: {resource.validate()}")
+        if resource_type == 'Patient':
+            result = deserialize_patient(data)
+        elif resource_type == 'Organization':
+            result = deserialize_organization(data)
+        elif resource_type == 'CarePlan':
+            result = deserialize_care_plan(data)
         else:
-            print(f"Parsed as generic resource: {type(resource)}")
+            print(f"Resource type {resource_type} not supported in this demo")
+            return None
             
+        print(f"Successfully parsed {resource_type} resource: {result.id}")
+        return result
+        
     except Exception as e:
         print(f"Error parsing resource: {e}")
+        return None
 
 
 def main():

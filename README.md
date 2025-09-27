@@ -1,4 +1,4 @@
-# Fast-FHIR: High-Performance FHIR R5 Parser
+# Fast-FHIR Parser: High-Performance FHIR Parser (R5)
 
 A blazing-fast Python library for **parsing and processing FHIR R5** (Fast Healthcare Interoperability Resources) data with C extensions for maximum performance. Built specifically for healthcare systems that need to process large volumes of FHIR data efficiently.
 
@@ -42,14 +42,22 @@ print(f"Patient: {patient.name[0].given[0]} {patient.name[0].family}")
 - **Batch Processing**: Efficient parsing of FHIR bundles and collections
 - **Extension Support**: Full support for FHIR extensions and profiles
 
-## ⚡ **Performance Benchmarks**
+## ⚡ **Performance**
 
-| Operation | Standard Parser | Fast-FHIR Parser | Speedup |
-|-----------|----------------|------------------|---------|
-| Patient JSON Parse | 2.5ms | 0.025ms | **100x** |
-| Bundle Processing | 150ms | 1.8ms | **83x** |
-| Large Dataset (10k resources) | 45s | 0.6s | **75x** |
-| Memory Usage | 250MB | 45MB | **5.5x less** |
+Fast-FHIR provides efficient FHIR resource deserialization with:
+- **Optimized Parsing**: Streamlined JSON to Python object conversion
+- **Memory Efficient**: Low memory overhead for large datasets
+- **Pydantic Integration**: Optional validation with performance optimization
+- **Graceful Fallback**: Pure Python implementation when C extensions unavailable
+
+Run benchmarks to see actual performance on your system:
+```bash
+make benchmark
+# or
+PYTHONPATH=./src python3 benchmarks/benchmark_parser.py
+```
+
+**📊 Comparative Results**: See [benchmarks/COMPARATIVE_RESULTS.md](benchmarks/COMPARATIVE_RESULTS.md) for detailed performance comparison against fhir.resources library.
 
 ## 🏥 **FHIR Parser Use Cases**
 
@@ -65,11 +73,11 @@ print(f"Patient: {patient.name[0].given[0]} {patient.name[0].family}")
 - **Quality Metrics**: Extract quality measures from FHIR resources
 - **Interoperability Testing**: Validate FHIR implementations
 
-### **Real-World Performance**
-- **Hospital Systems**: Process 100k+ patient records per hour
-- **Clinical Workflows**: Sub-millisecond response times for real-time apps
-- **Data Warehouses**: Efficient ETL pipelines for healthcare data lakes
-- **Mobile Health Apps**: Lightweight parsing for mobile FHIR clients
+### **Production Ready**
+- **Healthcare Integration**: Suitable for EHR data processing and FHIR API integration
+- **Clinical Applications**: Reliable parsing for healthcare applications
+- **Data Processing**: Efficient handling of FHIR bundles and collections
+- **Development Friendly**: Easy integration with existing Python healthcare projects
 
 ## Setup
 
@@ -272,47 +280,35 @@ parser = FHIRParser(
 
 **Total: 24+ implemented, 128+ planned for complete FHIR R5 coverage**
 
-## 📊 **FHIR Parser Benchmarks**
+## 📊 **Benchmarking**
 
-### **Parsing Speed Comparison**
+Fast-FHIR includes comprehensive benchmarking tools to measure performance:
+
+### **Run Benchmarks**
 ```bash
-# Benchmark against popular FHIR libraries
-python scripts/benchmark_parser.py
+# Quick benchmark
+make benchmark
 
-Results (parsing 1000 Patient resources):
-┌─────────────────┬──────────┬─────────────┬──────────┐
-│ Library         │ Time     │ Memory      │ Speedup  │
-├─────────────────┼──────────┼─────────────┼──────────┤
-│ Fast-FHIR (C)   │ 0.12s    │ 45MB        │ 100x     │
-│ Fast-FHIR (Py)  │ 1.8s     │ 78MB        │ 6.7x     │
-│ fhir.resources  │ 12.1s    │ 234MB       │ 1x       │
-│ Standard JSON   │ 15.3s    │ 312MB       │ 0.8x     │
-└─────────────────┴──────────┴─────────────┴──────────┘
-```
+# Detailed performance analysis
+PYTHONPATH=./src python3 benchmarks/performance_tests.py
 
-### **Real-World Performance Tests**
-```python
-# Test with actual healthcare data
+# Custom benchmark with your data
 from fast_fhir.benchmarks import run_performance_test
-
-# Parse Epic MyChart patient bundle (500 resources)
-epic_results = run_performance_test("epic_patient_bundle.json")
-print(f"Epic Bundle: {epic_results.parse_time:.2f}ms")
-
-# Parse Cerner FHIR API response (1000 resources)  
-cerner_results = run_performance_test("cerner_api_response.json")
-print(f"Cerner API: {cerner_results.parse_time:.2f}ms")
-
-# Parse synthetic patient data (10k resources)
-synthetic_results = run_performance_test("synthea_10k_patients.json")
-print(f"Synthea 10k: {synthetic_results.parse_time:.2f}s")
+result = run_performance_test("your_fhir_data.json")
+print(f"Parse time: {result.parse_time:.2f}ms")
 ```
 
-### **Memory Efficiency**
-- **Streaming Parser**: Process FHIR bundles without loading entire file into memory
-- **Lazy Loading**: Parse only requested resource fields
-- **Memory Pooling**: Reuse objects to minimize garbage collection
-- **Compression Support**: Built-in support for gzipped FHIR data
+### **Benchmark Categories**
+- **Deserializer Performance**: Compare Foundation, Entities, and Care Provision deserializers
+- **Validation Overhead**: Measure Pydantic validation impact
+- **Memory Usage**: Track memory consumption patterns
+- **Scaling Analysis**: Performance across different dataset sizes
+
+### **Current Performance Characteristics**
+- **Linear Scaling**: Parse time scales linearly with resource count
+- **Memory Efficient**: Low memory overhead (< 0.01MB per resource for most cases)
+- **High Success Rate**: 100% parsing success for valid FHIR data
+- **Consistent Performance**: Reliable performance across different resource types
 
 ## 🔧 **FHIR Parser Configuration**
 

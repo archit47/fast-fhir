@@ -87,6 +87,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+fhir_venv/
+benchmark_venv/
 
 # Spyder project settings
 .spyderproject

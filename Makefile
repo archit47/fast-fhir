@@ -23,7 +23,7 @@ install:
 
 build:
 	@echo "Building C extensions..."
-	python setup.py build_ext --inplace
+	python3 setup.py build_ext --inplace
 
 dev-install: install build
 	@echo "Installing in development mode..."
@@ -31,7 +31,7 @@ dev-install: install build
 
 test:
 	@echo "Running tests..."
-	pytest tests/ -v
+	PYTHONPATH=./src python3 -m pytest tests/ -v
 
 clean:
 	@echo "Cleaning build artifacts..."
@@ -46,8 +46,9 @@ clean:
 
 benchmark:
 	@echo "Running performance benchmarks..."
-	python -m pytest tests/test_fast_parser.py::TestFastFHIRParser::test_performance_info -v
-	@echo "For detailed benchmarks, run: python benchmarks/benchmark_parser.py"
+	PYTHONPATH=./src python3 benchmarks/benchmark_parser.py
+	@echo ""
+	@echo "For advanced performance tests, run: PYTHONPATH=./src python3 benchmarks/performance_tests.py"
 
 # Development shortcuts
 setup: deps install build

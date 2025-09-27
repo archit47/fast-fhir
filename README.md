@@ -29,7 +29,7 @@ print(f"Patient: {patient.name[0].given[0]} {patient.name[0].family}")
 - **Memory-efficient processing** of healthcare datasets
 
 ### **Comprehensive FHIR R5 Support**
-- **Foundation Resources**: Patient, Practitioner, PractitionerRole, Encounter, Person, RelatedPerson
+- **Foundation Resources**: Patient, Practitioner, PractitionerRole, Encounter, Person, RelatedPerson, Group 
 - **Care Provision Resources**: CarePlan, CareTeam, Goal, ServiceRequest, RiskAssessment
 - **Clinical Resources**: Observation, Condition, Procedure, DiagnosticReport
 - **Entities Resources**: Organization, Location, HealthcareService
@@ -278,7 +278,7 @@ parser = FHIRParser(
 | **Entities** | Organization, Location, HealthcareService, Schedule, Slot | 🚧 **In Progress** |
 | **Financial** | Coverage, Claim, ExplanationOfBenefit, Invoice | 📋 **Planned** |
 
-**Total: 24+ implemented, 128+ planned for complete FHIR R5 coverage**
+**Total: 24+ implemented, 60+ planned for complete FHIR R5 coverage**
 
 ## 📊 **Benchmarking**
 

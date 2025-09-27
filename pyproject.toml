@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fast-fhir"
-version = "0.1.0"
+version = "1.0.0"
 description = "High-performance FHIR R5 parser and validator for SMART on FHIR applications - Fast JSON deserialization with Pydantic validation for healthcare interoperability"
 authors = [{name = "Archit Kapoor", email = "archit47@users.noreply.github.com"}]
 maintainers = [{name = "Archit Kapoor", email = "archit47@users.noreply.github.com"}]
@@ -13,7 +13,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
     "pkgconfig>=1.5.0",
-    "pydantic>=1.8.0,<2.0.0",
+    "pydantic>=1.8.0",
 ]
 keywords = [
     "fhir", "fhir-r5", "smart-on-fhir", "parser", "healthcare", "hl7", "json", 
@@ -23,7 +23,7 @@ keywords = [
     "fhir-server", "healthcare-api", "medical-records", "health-informatics"
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Intended Audience :: Healthcare Industry",
     "Intended Audience :: Information Technology",
@@ -78,7 +78,7 @@ benchmarks = [
     "fhir.resources>=8.0.0",
 ]
 validation = [
-    "pydantic>=1.8.0,<2.0.0",
+    "pydantic>=1.8.0",
 ]
 smart-on-fhir = [
     "requests>=2.25.0",
@@ -87,7 +87,7 @@ smart-on-fhir = [
 all = [
     "pytest>=7.0.0",
     "fhir.resources>=8.0.0", 
-    "pydantic>=1.8.0,<2.0.0",
+    "pydantic>=1.8.0",
     "requests>=2.25.0",
     "httpx>=0.20.0",
 ]

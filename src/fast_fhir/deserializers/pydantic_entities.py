@@ -3,7 +3,7 @@ Pydantic models for FHIR R5 Entities resources
 Provides validation and serialization for Organization, Location, HealthcareService, etc.
 """
 
-from typing import List, Optional, Union, Any
+from typing import List, Optional, Union, Any, Literal
 from datetime import datetime, date, time
 from enum import Enum
 
@@ -138,7 +138,7 @@ class DeviceProperty(BaseModel):
 # Entities Resource Models
 class OrganizationModel(FHIRDomainResource):
     """FHIR Organization resource model"""
-    resourceType: str = Field(default="Organization", const=True)
+    resourceType: Literal["Organization"] = Field(default="Organization")
     
     identifier: Optional[List[Identifier]] = None
     active: Optional[bool] = None
@@ -152,7 +152,7 @@ class OrganizationModel(FHIRDomainResource):
 
 class LocationModel(FHIRDomainResource):
     """FHIR Location resource model"""
-    resourceType: str = Field(default="Location", const=True)
+    resourceType: Literal["Location"] = Field(default="Location")
     
     identifier: Optional[List[Identifier]] = None
     status: Optional[LocationStatus] = None
@@ -174,7 +174,7 @@ class LocationModel(FHIRDomainResource):
 
 class HealthcareServiceModel(FHIRDomainResource):
     """FHIR HealthcareService resource model"""
-    resourceType: str = Field(default="HealthcareService", const=True)
+    resourceType: Literal["HealthcareService"] = Field(default="HealthcareService")
     
     identifier: Optional[List[Identifier]] = None
     active: Optional[bool] = None
@@ -203,7 +203,7 @@ class HealthcareServiceModel(FHIRDomainResource):
 
 class EndpointModel(FHIRDomainResource):
     """FHIR Endpoint resource model"""
-    resourceType: str = Field(default="Endpoint", const=True)
+    resourceType: Literal["Endpoint"] = Field(default="Endpoint")
     
     identifier: Optional[List[Identifier]] = None
     status: str  # active | suspended | error | off | entered-in-error | test
@@ -219,7 +219,7 @@ class EndpointModel(FHIRDomainResource):
 
 class DeviceModel(FHIRDomainResource):
     """FHIR Device resource model"""
-    resourceType: str = Field(default="Device", const=True)
+    resourceType: Literal["Device"] = Field(default="Device")
     
     identifier: Optional[List[Identifier]] = None
     definition: Optional[Reference] = None
@@ -251,7 +251,7 @@ class DeviceModel(FHIRDomainResource):
 
 class SubstanceModel(FHIRDomainResource):
     """FHIR Substance resource model"""
-    resourceType: str = Field(default="Substance", const=True)
+    resourceType: Literal["Substance"] = Field(default="Substance")
     
     identifier: Optional[List[Identifier]] = None
     instance: bool
@@ -265,7 +265,7 @@ class SubstanceModel(FHIRDomainResource):
 
 class OrganizationAffiliationModel(FHIRDomainResource):
     """FHIR OrganizationAffiliation resource model"""
-    resourceType: str = Field(default="OrganizationAffiliation", const=True)
+    resourceType: Literal["OrganizationAffiliation"] = Field(default="OrganizationAffiliation")
     
     identifier: Optional[List[Identifier]] = None
     active: Optional[bool] = None

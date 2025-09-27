@@ -3,7 +3,7 @@ Pydantic models for FHIR R5 Foundation resources
 Provides validation and serialization for core FHIR resources like Patient, Practitioner, etc.
 """
 
-from typing import List, Optional, Union, Any
+from typing import List, Optional, Union, Any, Literal
 from datetime import datetime, date
 from enum import Enum
 
@@ -183,7 +183,7 @@ class PatientLink(BaseModel):
 
 class PatientModel(FHIRDomainResource):
     """FHIR Patient resource model"""
-    resourceType: str = Field(default="Patient", const=True)
+    resourceType: Literal["Patient"] = Field(default="Patient")
     
     # Patient-specific fields
     identifier: Optional[List[Identifier]] = None
@@ -222,7 +222,7 @@ class PractitionerQualification(BaseModel):
 
 class PractitionerModel(FHIRDomainResource):
     """FHIR Practitioner resource model"""
-    resourceType: str = Field(default="Practitioner", const=True)
+    resourceType: Literal["Practitioner"] = Field(default="Practitioner")
     
     identifier: Optional[List[Identifier]] = None
     active: Optional[bool] = None
@@ -249,7 +249,7 @@ class PractitionerRoleNotAvailable(BaseModel):
 
 class PractitionerRoleModel(FHIRDomainResource):
     """FHIR PractitionerRole resource model"""
-    resourceType: str = Field(default="PractitionerRole", const=True)
+    resourceType: Literal["PractitionerRole"] = Field(default="PractitionerRole")
     
     identifier: Optional[List[Identifier]] = None
     active: Optional[bool] = None
@@ -304,7 +304,7 @@ class EncounterLocation(BaseModel):
 
 class EncounterModel(FHIRDomainResource):
     """FHIR Encounter resource model"""
-    resourceType: str = Field(default="Encounter", const=True)
+    resourceType: Literal["Encounter"] = Field(default="Encounter")
     
     identifier: Optional[List[Identifier]] = None
     status: EncounterStatus
@@ -337,7 +337,7 @@ class PersonLink(BaseModel):
 
 class PersonModel(FHIRDomainResource):
     """FHIR Person resource model"""
-    resourceType: str = Field(default="Person", const=True)
+    resourceType: Literal["Person"] = Field(default="Person")
     
     identifier: Optional[List[Identifier]] = None
     name: Optional[List[HumanName]] = None
@@ -357,7 +357,7 @@ class RelatedPersonCommunication(BaseModel):
 
 class RelatedPersonModel(FHIRDomainResource):
     """FHIR RelatedPerson resource model"""
-    resourceType: str = Field(default="RelatedPerson", const=True)
+    resourceType: Literal["RelatedPerson"] = Field(default="RelatedPerson")
     
     identifier: Optional[List[Identifier]] = None
     active: Optional[bool] = None
@@ -404,7 +404,7 @@ class GroupMember(BaseModel):
 
 class GroupModel(FHIRDomainResource):
     """FHIR Group resource model"""
-    resourceType: str = Field(default="Group", const=True)
+    resourceType: Literal["Group"] = Field(default="Group")
     
     identifier: Optional[List[Identifier]] = None
     active: Optional[bool] = None

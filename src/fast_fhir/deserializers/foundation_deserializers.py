@@ -153,18 +153,30 @@ class FHIRFoundationDeserializer:
         Args:
             use_pydantic_validation: Whether to use Pydantic for validation
         """
-        self.use_pydantic_validation = use_pydantic_validation and HAS_PYDANTIC
+        self.use_pydantic_validation = use_pydantic_validation and HAS_PYDANTIC and PYDANTIC_FOUNDATION_MODELS_AVAILABLE
         
-        # Resource type mapping
-        self.resource_map = {
-            'Patient': (PatientModel, Patient),
-            'Practitioner': (PractitionerModel, Practitioner),
-            'PractitionerRole': (PractitionerRoleModel, PractitionerRole),
-            'Encounter': (EncounterModel, Encounter),
-            'Person': (PersonModel, Person),
-            'RelatedPerson': (RelatedPersonModel, RelatedPerson),
-            'Group': (GroupModel, Group)
-        }
+        # Resource type mapping (handle case where Pydantic models are None)
+        if PYDANTIC_FOUNDATION_MODELS_AVAILABLE:
+            self.resource_map = {
+                'Patient': (PatientModel, Patient),
+                'Practitioner': (PractitionerModel, Practitioner),
+                'PractitionerRole': (PractitionerRoleModel, PractitionerRole),
+                'Encounter': (EncounterModel, Encounter),
+                'Person': (PersonModel, Person),
+                'RelatedPerson': (RelatedPersonModel, RelatedPerson),
+                'Group': (GroupModel, Group)
+            }
+        else:
+            # No Pydantic models available, use only resource classes
+            self.resource_map = {
+                'Patient': (None, Patient),
+                'Practitioner': (None, Practitioner),
+                'PractitionerRole': (None, PractitionerRole),
+                'Encounter': (None, Encounter),
+                'Person': (None, Person),
+                'RelatedPerson': (None, RelatedPerson),
+                'Group': (None, Group)
+            }
     
     def deserialize_foundation_resource(self, json_data: Union[str, Dict[str, Any]], 
                                       resource_type: Optional[str] = None) -> Any:

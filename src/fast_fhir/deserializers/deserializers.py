@@ -58,18 +58,21 @@ class FHIRCareProvisionDeserializer:
         Args:
             use_pydantic_validation: Whether to use Pydantic validation (requires pydantic package)
         """
-        self.use_pydantic_validation = use_pydantic_validation and HAS_PYDANTIC
+        self.use_pydantic_validation = use_pydantic_validation and HAS_PYDANTIC and PYDANTIC_CARE_PROVISION_MODELS_AVAILABLE
         
-        # Resource type mapping
-        self.resource_models = {
-            "CarePlan": CarePlanModel,
-            "CareTeam": CareTeamModel,
-            "Goal": GoalModel,
-            "ServiceRequest": ServiceRequestModel,
-            "NutritionOrder": NutritionOrderModel,
-            "RiskAssessment": RiskAssessmentModel,
-            "VisionPrescription": VisionPrescriptionModel
-        }
+        # Resource type mapping (only if Pydantic models are available)
+        if PYDANTIC_CARE_PROVISION_MODELS_AVAILABLE:
+            self.resource_models = {
+                "CarePlan": CarePlanModel,
+                "CareTeam": CareTeamModel,
+                "Goal": GoalModel,
+                "ServiceRequest": ServiceRequestModel,
+                "NutritionOrder": NutritionOrderModel,
+                "RiskAssessment": RiskAssessmentModel,
+                "VisionPrescription": VisionPrescriptionModel
+            }
+        else:
+            self.resource_models = {}
         
         self.resource_classes = {
             "CarePlan": CarePlan,
@@ -109,11 +112,12 @@ class FHIRCareProvisionDeserializer:
             if resource_type not in self.resource_classes:
                 raise FHIRDeserializationError(f"Unsupported resource type: {resource_type}")
             
-            # Validate with Pydantic if available
-            if self.use_pydantic_validation:
-                pydantic_model = self.resource_models[resource_type]
-                validated_data = pydantic_model(**data)
-                data = validated_data.dict()
+            # Validate with Pydantic if available and models are loaded
+            if self.use_pydantic_validation and PYDANTIC_CARE_PROVISION_MODELS_AVAILABLE:
+                pydantic_model = self.resource_models.get(resource_type)
+                if pydantic_model:
+                    validated_data = pydantic_model(**data)
+                    data = validated_data.dict()
             
             # Convert to FHIR resource object
             return self._convert_to_fhir_resource(resource_type, data)
@@ -160,13 +164,13 @@ class FHIRCareProvisionDeserializer:
             care_plan.description = FHIRString(data["description"])
         if "subject" in data:
             care_plan.subject = self._convert_reference(data["subject"])
-        if "encounter" in data:
+        if "encounter" in data and data["encounter"] is not None:
             care_plan.encounter = self._convert_reference(data["encounter"])
-        if "period" in data:
+        if "period" in data and data["period"] is not None:
             care_plan.period = self._convert_period(data["period"])
         if "created" in data:
             care_plan.created = FHIRDateTime(data["created"])
-        if "author" in data:
+        if "author" in data and data["author"] is not None:
             care_plan.author = self._convert_reference(data["author"])
         
         # Set arrays
@@ -303,11 +307,11 @@ class FHIRCareProvisionDeserializer:
                     target.measure = self._convert_codeable_concept(target_data["measure"])
                 if "dueDate" in target_data:
                     target.due_date = target_data["dueDate"]
-                if "detailQuantity" in target_data:
+                if "detailQuantity" in target_data and target_data["detailQuantity"] is not None:
                     target.detail_quantity = self._convert_quantity(target_data["detailQuantity"])
-                if "detailRange" in target_data:
+                if "detailRange" in target_data and target_data["detailRange"] is not None:
                     target.detail_range = self._convert_range(target_data["detailRange"])
-                if "detailCodeableConcept" in target_data:
+                if "detailCodeableConcept" in target_data and target_data["detailCodeableConcept"] is not None:
                     target.detail_codeable_concept = self._convert_codeable_concept(target_data["detailCodeableConcept"])
                 if "detailString" in target_data:
                     target.detail_string = FHIRString(target_data["detailString"])
@@ -344,7 +348,7 @@ class FHIRCareProvisionDeserializer:
             service_request.occurrence_date_time = FHIRDateTime(data["occurrenceDateTime"])
         if "occurrencePeriod" in data:
             service_request.occurrence_period = self._convert_period(data["occurrencePeriod"])
-        if "occurrenceTiming" in data:
+        if "occurrenceTiming" in data and data["occurrenceTiming"] is not None:
             service_request.occurrence_timing = self._convert_timing(data["occurrenceTiming"])
         if "authoredOn" in data:
             service_request.authored_on = FHIRDateTime(data["authoredOn"])
@@ -469,7 +473,7 @@ class FHIRCareProvisionDeserializer:
                     prediction.outcome = self._convert_codeable_concept(prediction_data["outcome"])
                 if "probabilityDecimal" in prediction_data:
                     prediction.probability_decimal = FHIRDecimal(prediction_data["probabilityDecimal"])
-                if "probabilityRange" in prediction_data:
+                if "probabilityRange" in prediction_data and prediction_data["probabilityRange"] is not None:
                     prediction.probability_range = self._convert_range(prediction_data["probabilityRange"])
                 if "qualitativeRisk" in prediction_data:
                     prediction.qualitative_risk = self._convert_codeable_concept(prediction_data["qualitativeRisk"])
@@ -551,17 +555,23 @@ class FHIRCareProvisionDeserializer:
     # Helper methods for converting FHIR data types
     def _convert_reference(self, data: Dict[str, Any]) -> FHIRReference:
         """Convert reference data to FHIRReference"""
+        if data is None:
+            return FHIRReference()
+        
         reference = FHIRReference()
         if "reference" in data:
             reference.reference = FHIRString(data["reference"])
         if "display" in data:
             reference.display = FHIRString(data["display"])
-        if "identifier" in data:
+        if "identifier" in data and data["identifier"] is not None:
             reference.identifier = self._convert_identifier(data["identifier"])
         return reference
     
     def _convert_codeable_concept(self, data: Dict[str, Any]) -> FHIRCodeableConcept:
         """Convert codeable concept data to FHIRCodeableConcept"""
+        if data is None:
+            return FHIRCodeableConcept()
+        
         concept = FHIRCodeableConcept()
         if "text" in data:
             concept.text = FHIRString(data["text"])
@@ -570,6 +580,9 @@ class FHIRCareProvisionDeserializer:
     
     def _convert_identifier(self, data: Dict[str, Any]) -> FHIRIdentifier:
         """Convert identifier data to FHIRIdentifier"""
+        if data is None:
+            return FHIRIdentifier()
+        
         identifier = FHIRIdentifier()
         if "system" in data:
             identifier.system = FHIRString(data["system"])
@@ -581,6 +594,9 @@ class FHIRCareProvisionDeserializer:
     
     def _convert_period(self, data: Dict[str, Any]) -> FHIRPeriod:
         """Convert period data to FHIRPeriod"""
+        if data is None:
+            return FHIRPeriod()
+        
         return FHIRPeriod(
             start=data.get("start"),
             end=data.get("end")
@@ -588,6 +604,9 @@ class FHIRCareProvisionDeserializer:
     
     def _convert_quantity(self, data: Dict[str, Any]) -> FHIRQuantity:
         """Convert quantity data to FHIRQuantity"""
+        if data is None:
+            return FHIRQuantity()
+        
         return FHIRQuantity(
             value=data.get("value"),
             unit=data.get("unit"),
@@ -597,8 +616,11 @@ class FHIRCareProvisionDeserializer:
     
     def _convert_annotation(self, data: Dict[str, Any]) -> FHIRAnnotation:
         """Convert annotation data to FHIRAnnotation"""
+        if data is None:
+            return FHIRAnnotation()
+        
         author_ref = None
-        if "authorReference" in data:
+        if "authorReference" in data and data["authorReference"] is not None:
             author_ref = self._convert_reference(data["authorReference"])
         
         return FHIRAnnotation(
@@ -610,6 +632,9 @@ class FHIRCareProvisionDeserializer:
     
     def _convert_timing(self, data: Dict[str, Any]) -> FHIRTiming:
         """Convert timing data to FHIRTiming"""
+        if data is None:
+            return FHIRTiming()
+        
         code = None
         if "code" in data:
             code = self._convert_codeable_concept(data["code"])
@@ -636,6 +661,9 @@ class FHIRCareProvisionDeserializer:
     
     def _convert_range(self, data: Dict[str, Any]) -> FHIRRange:
         """Convert range data to FHIRRange"""
+        if data is None:
+            return FHIRRange()
+        
         low = None
         if "low" in data:
             low = self._convert_quantity(data["low"])

@@ -390,9 +390,9 @@ class TestEntitiesDeserializerIntegration(unittest.TestCase):
 
 if __name__ == '__main__':
     # Print test environment info
-    print("🧪 Running Entities Deserializers Tests")
+    print("Running Entities Deserializers Tests")
     print("=" * 50)
-    print(f"📦 Pydantic Entities Available: {PYDANTIC_ENTITIES_AVAILABLE}")
+    print(f"Pydantic Entities Available: {PYDANTIC_ENTITIES_AVAILABLE}")
     print()
     
     # Run tests

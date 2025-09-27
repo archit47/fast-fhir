@@ -15,12 +15,12 @@ def run_command(cmd, description):
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=300)
         
         if result.returncode == 0:
-            print(f"✅ {description} - SUCCESS")
+            print(f"SUCCESS: {description}")
             if result.stdout.strip():
                 print(f"Output: {result.stdout[:500]}...")
             return True
         else:
-            print(f"❌ {description} - FAILED")
+            print(f"FAILED: {description}")
             print(f"Error: {result.stderr[:500]}...")
             return False
     except subprocess.TimeoutExpired:
@@ -55,9 +55,9 @@ def check_dependencies():
         result = subprocess.run([sys.executable, "-c", f"import {package}"], 
                               capture_output=True)
         if result.returncode == 0:
-            print(f"✅ {package} available")
+            print(f"SUCCESS: {package} available")
         else:
-            print(f"❌ {package} missing")
+            print(f"ERROR: {package} missing")
             return False
     
     return True
@@ -68,7 +68,7 @@ def test_c_compilation():
     print("=" * 50)
     
     if not check_dependencies():
-        print("❌ Missing dependencies - cannot test compilation")
+        print("ERROR: Missing dependencies - cannot test compilation")
         return False
     
     # Clean previous builds

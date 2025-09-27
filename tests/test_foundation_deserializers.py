@@ -376,9 +376,9 @@ class TestFoundationDeserializerIntegration(unittest.TestCase):
 
 if __name__ == '__main__':
     # Print test environment info
-    print("🧪 Running Foundation Deserializers Tests")
+    print("Running Foundation Deserializers Tests")
     print("=" * 45)
-    print(f"📦 Pydantic Foundation Available: {PYDANTIC_FOUNDATION_AVAILABLE}")
+    print(f"Pydantic Foundation Available: {PYDANTIC_FOUNDATION_AVAILABLE}")
     print()
     
     # Run tests

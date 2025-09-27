@@ -137,11 +137,11 @@ class TestPackageStructure(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    print("🧪 Running Fast-FHIR Core Functionality Tests")
+    print("Running Fast-FHIR Core Functionality Tests")
     print("=" * 50)
-    print(f"📦 Fast-FHIR Available: {FAST_FHIR_AVAILABLE}")
+    print(f"Fast-FHIR Available: {FAST_FHIR_AVAILABLE}")
     if FAST_FHIR_AVAILABLE:
-        print(f"📦 Pydantic Available: {PYDANTIC_AVAILABLE}")
+        print(f"Pydantic Available: {PYDANTIC_AVAILABLE}")
     print()
     
     unittest.main(verbosity=2)

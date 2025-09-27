@@ -6,7 +6,7 @@ import sys
 
 def test_config():
     """Test if the configuration is valid."""
-    print("🧪 Testing pyproject.toml configuration...")
+    print("Testing pyproject.toml configuration...")
     
     try:
         # Test if setup.py can be parsed without errors
@@ -15,15 +15,15 @@ def test_config():
         ], capture_output=True, text=True, timeout=30)
         
         if result.returncode == 0:
-            print("✅ setup.py configuration is valid")
+            print("SUCCESS: setup.py configuration is valid")
             return True
         else:
-            print("❌ setup.py configuration failed:")
+            print("ERROR: setup.py configuration failed:")
             print(result.stderr)
             return False
             
     except Exception as e:
-        print(f"❌ Error testing configuration: {e}")
+        print(f"ERROR: Error testing configuration: {e}")
         return False
 
 if __name__ == "__main__":

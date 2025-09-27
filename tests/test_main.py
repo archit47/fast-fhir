@@ -1,6 +1,10 @@
 """Tests for the main module."""
 
-from src.main import main
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+from main import main
 
 
 def test_main():

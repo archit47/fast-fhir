@@ -1,22 +1,29 @@
 """Setup script for Fast-FHIR with high-performance C extensions."""
 
 from setuptools import setup, Extension, find_packages
-import pkgconfig
-
-# Get cJSON library flags
 import platform
 
+# Get cJSON library flags
 try:
+    import pkgconfig
     cjson_flags = pkgconfig.parse('libcjson')
     include_dirs = cjson_flags['include_dirs']
     library_dirs = cjson_flags['library_dirs']
     libraries = cjson_flags['libraries']
-except:
-    # Fallback if pkg-config not available
+    print("Found cJSON via pkg-config")
+except (ImportError, Exception) as e:
+    # Fallback if pkg-config not available or cJSON not found
+    print(f"pkg-config not available or cJSON not found: {e}")
+    print("Using fallback paths for cJSON")
+    
     if platform.system() == 'Darwin':  # macOS
         # Try both Intel and Apple Silicon paths
         include_dirs = ['/usr/local/include', '/opt/homebrew/include']
         library_dirs = ['/usr/local/lib', '/opt/homebrew/lib']
+    elif platform.system() == 'Windows':
+        # Windows fallback - C extensions will be disabled
+        include_dirs = []
+        library_dirs = []
     else:
         include_dirs = ['/usr/local/include']
         library_dirs = ['/usr/local/lib']
@@ -139,19 +146,43 @@ fhir_new_resources_c = Extension(
     extra_compile_args=extra_compile_args
 )
 
+# Determine if we should build C extensions
+build_c_extensions = True
+
+# Check if we have the necessary dependencies for C extensions
+if platform.system() == 'Windows':
+    print("Windows detected - C extensions disabled by default")
+    build_c_extensions = False
+elif not include_dirs or not library_dirs:
+    print("cJSON not found - C extensions disabled")
+    build_c_extensions = False
+
+# Prepare extension modules
+ext_modules = []
+if build_c_extensions:
+    try:
+        ext_modules = [
+            fhir_parser_c, 
+            fhir_datatypes_c, 
+            fhir_foundation_c,
+            fhir_clinical_c,
+            fhir_medication_c,
+            fhir_workflow_c,
+            fhir_specialized_c,
+            fhir_new_resources_c
+        ]
+        print(f"Building with {len(ext_modules)} C extensions")
+    except Exception as e:
+        print(f"C extension setup failed: {e}")
+        print("Falling back to Python-only installation")
+        ext_modules = []
+else:
+    print("Installing in Python-only mode")
+
 setup(
     packages=find_packages(where="src"),
     package_dir={"": "src"},
-    ext_modules=[
-        fhir_parser_c, 
-        fhir_datatypes_c, 
-        fhir_foundation_c,
-        fhir_clinical_c,
-        fhir_medication_c,
-        fhir_workflow_c,
-        fhir_specialized_c,
-        fhir_new_resources_c
-    ],
+    ext_modules=ext_modules,
     package_data={
         "fast_fhir": ["ext/*.c", "ext/*.h"],
     },

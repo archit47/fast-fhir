@@ -435,8 +435,8 @@ except ImportError:
 
 ```bash
 # Clone repository
-git clone <repository-url>
-cd fhir-r5-parser
+git clone https://github.com/archit47/fast-fhir.git
+cd fast-fhir
 
 # Run complete setup
 make setup

@@ -471,8 +471,8 @@ int main(void) {
 
 ```bash
 # Clone and setup
-git clone <repository>
-cd fhir-c-extensions
+git clone https://github.com/archit47/fast-fhir.git
+cd fast-fhir
 
 # Build and test
 mkdir build && cd build

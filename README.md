@@ -97,7 +97,7 @@ print(f"Patient: {patient.name[0].given[0]} {patient.name[0].family}")
 
 ### From Source (Recommended for Development)
 ```bash
-git clone https://github.com/your-username/fast-fhir.git
+git clone https://github.com/archit47/fast-fhir.git
 cd fast-fhir
 pip install -r requirements.txt
 python setup.py build_ext --inplace

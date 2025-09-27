@@ -98,19 +98,23 @@ For more examples and demonstrations, see the examples/ directory:
     
     if args.status:
         show_status()
+        return None
     elif args.parse:
         parse_resource(args.parse)
+        return None
     elif args.demo:
         print("Running comprehensive demo...")
         print("For the full demo experience, run:")
         print("  python examples/demo_comprehensive.py")
         print()
         show_status()
+        return None
     else:
         # Default behavior - show status and help
         show_status()
         print("\nFor more options, run: python main.py --help")
         print("For demonstrations, see the examples/ directory")
+        return None
 
 
 if __name__ == "__main__":

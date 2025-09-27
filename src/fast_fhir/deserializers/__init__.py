@@ -5,16 +5,23 @@ This package provides comprehensive deserialization functionality for FHIR R5 re
 including JSON to Python object conversion, Pydantic validation, and type-specific utilities.
 
 Main Components:
-- deserializers: Core deserialization functionality
+- deserializers: Core deserialization functionality for care provision resources
+- foundation_deserializers: Deserialization for foundation resources (Patient, Practitioner, etc.)
 - pydantic_models: General Pydantic model definitions
 - pydantic_care_provision: Specialized Pydantic models for care provision resources
+- pydantic_foundation: Specialized Pydantic models for foundation resources
 
 Usage:
-    from fhir.deserializers import FHIRCareProvisionDeserializer
-    from fhir.deserializers.pydantic_care_provision import CarePlan, CareTeam
+    # Care provision resources
+    from fast_fhir.deserializers import FHIRCareProvisionDeserializer
+    from fast_fhir.deserializers.pydantic_care_provision import CarePlan, CareTeam
+    
+    # Foundation resources
+    from fast_fhir.deserializers import FHIRFoundationDeserializer
+    from fast_fhir.deserializers import deserialize_patient, deserialize_practitioner
 """
 
-# Import main deserializer functionality
+# Import care provision deserializer functionality
 from .deserializers import (
     FHIRCareProvisionDeserializer,
     FHIRDeserializationError,
@@ -28,6 +35,18 @@ from .deserializers import (
     deserialize_nutrition_order
 )
 
+# Import foundation deserializer functionality
+from .foundation_deserializers import (
+    FHIRFoundationDeserializer,
+    FHIRFoundationDeserializationError,
+    deserialize_patient,
+    deserialize_practitioner,
+    deserialize_practitioner_role,
+    deserialize_encounter,
+    deserialize_person,
+    deserialize_related_person
+)
+
 # Import Pydantic models for care provision resources
 try:
     from .pydantic_care_provision import (
@@ -39,9 +58,30 @@ try:
         VisionPrescription,
         NutritionOrder
     )
-    PYDANTIC_AVAILABLE = True
+    PYDANTIC_CARE_PROVISION_AVAILABLE = True
 except ImportError:
-    PYDANTIC_AVAILABLE = False
+    PYDANTIC_CARE_PROVISION_AVAILABLE = False
+
+# Import Pydantic models for foundation resources
+try:
+    from .pydantic_foundation import (
+        PatientModel,
+        PractitionerModel,
+        PractitionerRoleModel,
+        EncounterModel,
+        PersonModel,
+        RelatedPersonModel,
+        HumanName,
+        ContactPoint,
+        Address,
+        Identifier,
+        Reference,
+        CodeableConcept,
+        AdministrativeGender
+    )
+    PYDANTIC_FOUNDATION_AVAILABLE = True
+except ImportError:
+    PYDANTIC_FOUNDATION_AVAILABLE = False
 
 # Import general Pydantic models
 try:
@@ -50,15 +90,23 @@ try:
         FHIRElement,
         FHIRExtension
     )
+    PYDANTIC_GENERAL_AVAILABLE = True
 except ImportError:
-    pass
+    PYDANTIC_GENERAL_AVAILABLE = False
+
+# Overall Pydantic availability
+PYDANTIC_AVAILABLE = (PYDANTIC_CARE_PROVISION_AVAILABLE or 
+                     PYDANTIC_FOUNDATION_AVAILABLE or 
+                     PYDANTIC_GENERAL_AVAILABLE)
 
 __all__ = [
-    # Core deserializer
+    # Core deserializers
     'FHIRCareProvisionDeserializer',
+    'FHIRFoundationDeserializer',
     'FHIRDeserializationError',
+    'FHIRFoundationDeserializationError',
     
-    # Convenience functions
+    # Care provision convenience functions
     'deserialize_care_provision_resource',
     'deserialize_care_plan',
     'deserialize_care_team', 
@@ -68,12 +116,23 @@ __all__ = [
     'deserialize_vision_prescription',
     'deserialize_nutrition_order',
     
-    # Pydantic availability flag
-    'PYDANTIC_AVAILABLE'
+    # Foundation convenience functions
+    'deserialize_patient',
+    'deserialize_practitioner',
+    'deserialize_practitioner_role',
+    'deserialize_encounter',
+    'deserialize_person',
+    'deserialize_related_person',
+    
+    # Pydantic availability flags
+    'PYDANTIC_AVAILABLE',
+    'PYDANTIC_CARE_PROVISION_AVAILABLE',
+    'PYDANTIC_FOUNDATION_AVAILABLE',
+    'PYDANTIC_GENERAL_AVAILABLE'
 ]
 
-# Add Pydantic models to __all__ if available
-if PYDANTIC_AVAILABLE:
+# Add Care Provision Pydantic models to __all__ if available
+if PYDANTIC_CARE_PROVISION_AVAILABLE:
     __all__.extend([
         'CarePlan',
         'CareTeam',
@@ -81,7 +140,30 @@ if PYDANTIC_AVAILABLE:
         'ServiceRequest',
         'RiskAssessment',
         'VisionPrescription',
-        'NutritionOrder',
+        'NutritionOrder'
+    ])
+
+# Add Foundation Pydantic models to __all__ if available
+if PYDANTIC_FOUNDATION_AVAILABLE:
+    __all__.extend([
+        'PatientModel',
+        'PractitionerModel',
+        'PractitionerRoleModel',
+        'EncounterModel',
+        'PersonModel',
+        'RelatedPersonModel',
+        'HumanName',
+        'ContactPoint',
+        'Address',
+        'Identifier',
+        'Reference',
+        'CodeableConcept',
+        'AdministrativeGender'
+    ])
+
+# Add General Pydantic models to __all__ if available
+if PYDANTIC_GENERAL_AVAILABLE:
+    __all__.extend([
         'FHIRResource',
         'FHIRElement',
         'FHIRExtension'

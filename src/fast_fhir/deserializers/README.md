@@ -2,36 +2,63 @@
 
 This package provides comprehensive deserialization functionality for FHIR R5 resources, converting JSON data into Python objects with optional Pydantic validation and high-performance processing.
 
+**Now supports both Foundation and Care Provision resources!**
+
 ## Package Structure
 
 ```
-src/fhir/deserializers/
+src/fast_fhir/deserializers/
 ├── __init__.py                    # Package initialization and exports
-├── deserializers.py               # Core deserialization functionality
+├── deserializers.py               # Care provision deserialization functionality
+├── foundation_deserializers.py   # Foundation resource deserialization
 ├── pydantic_models.py             # General Pydantic model definitions
-├── pydantic_care_provision.py     # Specialized Pydantic models for care provision
+├── pydantic_care_provision.py     # Pydantic models for care provision resources
+├── pydantic_foundation.py         # Pydantic models for foundation resources
 └── README.md                      # This file
 ```
 
 ## Core Components
 
-### 1. FHIRCareProvisionDeserializer
+### 1. Foundation Resource Deserializer
 
-The main deserializer class that handles conversion of JSON data to FHIR resource objects.
+The main deserializer for core FHIR resources like Patient, Practitioner, etc.
 
 ```python
-from src.fhir.deserializers import FHIRCareProvisionDeserializer
+from fast_fhir.deserializers import FHIRFoundationDeserializer
+
+deserializer = FHIRFoundationDeserializer(use_pydantic_validation=True)
+patient = deserializer.deserialize_patient(json_data)
+practitioner = deserializer.deserialize_practitioner(json_data)
+```
+
+### 2. Care Provision Deserializer
+
+Specialized deserializer for care provision resources.
+
+```python
+from fast_fhir.deserializers import FHIRCareProvisionDeserializer
 
 deserializer = FHIRCareProvisionDeserializer(use_pydantic_validation=True)
 care_plan = deserializer.deserialize_care_plan(json_data)
 ```
 
-### 2. Convenience Functions
+### 3. Convenience Functions
 
 Type-specific functions for easy deserialization:
 
 ```python
-from src.fhir.deserializers import (
+# Foundation resources
+from fast_fhir.deserializers import (
+    deserialize_patient,
+    deserialize_practitioner,
+    deserialize_practitioner_role,
+    deserialize_encounter,
+    deserialize_person,
+    deserialize_related_person
+)
+
+# Care provision resources
+from fast_fhir.deserializers import (
     deserialize_care_plan,
     deserialize_care_team,
     deserialize_goal,
@@ -42,26 +69,47 @@ from src.fhir.deserializers import (
 )
 
 # Direct deserialization
+patient = deserialize_patient(json_data)
 care_plan = deserialize_care_plan(json_data)
-care_team = deserialize_care_team(json_data)
 ```
 
-### 3. Pydantic Models
+### 4. Pydantic Models
 
 Optional Pydantic models for enhanced validation:
 
 ```python
-from src.fhir.deserializers.pydantic_care_provision import (
+# Foundation resource models
+from fast_fhir.deserializers.pydantic_foundation import (
+    PatientModel, PractitionerModel, EncounterModel
+)
+
+# Care provision resource models
+from fast_fhir.deserializers.pydantic_care_provision import (
     CarePlan, CareTeam, Goal, ServiceRequest
 )
 
 # Check if Pydantic is available
-from src.fhir.deserializers import PYDANTIC_AVAILABLE
+from fast_fhir.deserializers import (
+    PYDANTIC_AVAILABLE,
+    PYDANTIC_FOUNDATION_AVAILABLE,
+    PYDANTIC_CARE_PROVISION_AVAILABLE
+)
 ```
 
 ## Supported Resource Types
 
-The deserializers package currently supports the following FHIR R5 Care Provision resources:
+### Foundation Resources
+Core FHIR resources for healthcare entities:
+
+- **Patient** - Patient demographics and administrative information
+- **Practitioner** - Healthcare provider information and credentials
+- **PractitionerRole** - Practitioner roles, specialties, and availability
+- **Encounter** - Healthcare encounters, visits, and episodes
+- **Person** - Person demographics (broader scope than Patient)
+- **RelatedPerson** - Persons related to patients (family, caregivers, etc.)
+
+### Care Provision Resources
+Resources for care planning and coordination:
 
 - **CarePlan** - Care plans and treatment protocols
 - **CareTeam** - Care team compositions and roles

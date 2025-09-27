@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "fast-fhir"
 version = "0.1.0"
 description = "High-performance FHIR R5 parser and processor with C extensions"
-authors = [{name = "Fast-FHIR", email = "fast-fhir@example.com"}]
+authors = [{name = "Archit Kapoor"}]
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.8"

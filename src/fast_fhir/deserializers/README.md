@@ -8,13 +8,15 @@ This package provides comprehensive deserialization functionality for FHIR R5 re
 
 ```
 src/fast_fhir/deserializers/
-├── __init__.py                    # Package initialization and exports
-├── deserializers.py               # Care provision deserialization functionality
-├── foundation_deserializers.py   # Foundation resource deserialization
-├── pydantic_models.py             # General Pydantic model definitions
-├── pydantic_care_provision.py     # Pydantic models for care provision resources
-├── pydantic_foundation.py         # Pydantic models for foundation resources
-└── README.md                      # This file
+├── __init__.py                      # Package initialization and exports
+├── deserializers.py                 # Care provision deserialization functionality
+├── foundation_deserializers.py     # Foundation resource deserialization
+├── entities_deserializers.py       # Entities resource deserialization
+├── pydantic_models.py               # General Pydantic model definitions
+├── pydantic_care_provision.py       # Pydantic models for care provision resources
+├── pydantic_foundation.py           # Pydantic models for foundation resources
+├── pydantic_entities.py             # Pydantic models for entities resources
+└── README.md                        # This file
 ```
 
 ## Core Components
@@ -31,7 +33,19 @@ patient = deserializer.deserialize_patient(json_data)
 practitioner = deserializer.deserialize_practitioner(json_data)
 ```
 
-### 2. Care Provision Deserializer
+### 2. Entities Resource Deserializer
+
+Deserializer for entities and organizational resources.
+
+```python
+from fast_fhir.deserializers import FHIREntitiesDeserializer
+
+deserializer = FHIREntitiesDeserializer(use_pydantic_validation=True)
+organization = deserializer.deserialize_organization(json_data)
+location = deserializer.deserialize_location(json_data)
+```
+
+### 3. Care Provision Deserializer
 
 Specialized deserializer for care provision resources.
 
@@ -42,7 +56,7 @@ deserializer = FHIRCareProvisionDeserializer(use_pydantic_validation=True)
 care_plan = deserializer.deserialize_care_plan(json_data)
 ```
 
-### 3. Convenience Functions
+### 4. Convenience Functions
 
 Type-specific functions for easy deserialization:
 
@@ -55,6 +69,18 @@ from fast_fhir.deserializers import (
     deserialize_encounter,
     deserialize_person,
     deserialize_related_person
+)
+
+# Entities resources
+from fast_fhir.deserializers import (
+    deserialize_organization,
+    deserialize_location,
+    deserialize_healthcare_service,
+    deserialize_endpoint,
+    deserialize_device,
+    deserialize_group,
+    deserialize_substance,
+    deserialize_organization_affiliation
 )
 
 # Care provision resources
@@ -70,10 +96,11 @@ from fast_fhir.deserializers import (
 
 # Direct deserialization
 patient = deserialize_patient(json_data)
+organization = deserialize_organization(json_data)
 care_plan = deserialize_care_plan(json_data)
 ```
 
-### 4. Pydantic Models
+### 5. Pydantic Models
 
 Optional Pydantic models for enhanced validation:
 
@@ -81,6 +108,11 @@ Optional Pydantic models for enhanced validation:
 # Foundation resource models
 from fast_fhir.deserializers.pydantic_foundation import (
     PatientModel, PractitionerModel, EncounterModel
+)
+
+# Entities resource models
+from fast_fhir.deserializers.pydantic_entities import (
+    OrganizationModel, LocationModel, DeviceModel
 )
 
 # Care provision resource models
@@ -92,6 +124,7 @@ from fast_fhir.deserializers.pydantic_care_provision import (
 from fast_fhir.deserializers import (
     PYDANTIC_AVAILABLE,
     PYDANTIC_FOUNDATION_AVAILABLE,
+    PYDANTIC_ENTITIES_AVAILABLE,
     PYDANTIC_CARE_PROVISION_AVAILABLE
 )
 ```
@@ -107,6 +140,23 @@ Core FHIR resources for healthcare entities:
 - **Encounter** - Healthcare encounters, visits, and episodes
 - **Person** - Person demographics (broader scope than Patient)
 - **RelatedPerson** - Persons related to patients (family, caregivers, etc.)
+
+### Foundation Resources (continued)
+- **Group** - Collections of entities (patients, practitioners, etc.)
+
+### Entities Resources
+Resources for healthcare organizations and infrastructure:
+
+- **Organization** - Healthcare organizations, departments, and entities
+- **OrganizationAffiliation** - Relationships between organizations
+- **Location** - Physical locations and facilities
+- **HealthcareService** - Services provided by organizations
+- **Endpoint** - Technical endpoints for system integration
+- **Device** - Medical devices and equipment
+- **DeviceMetric** - Device measurements and metrics
+- **Substance** - Chemical substances and materials
+- **BiologicallyDerivedProduct** - Blood products, tissues, organs
+- **NutritionProduct** - Nutritional products and supplements
 
 ### Care Provision Resources
 Resources for care planning and coordination:

@@ -8,9 +8,11 @@ Shows how to convert JSON strings to FHIR resource objects with validation
 import sys
 import os
 import json
-sys.path.insert(0, os.path.abspath('..'))
 
-from src.fhir.deserializers import (
+# Add the src directory to the path so we can import fast_fhir
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+from fast_fhir.deserializers import (
     FHIRCareProvisionDeserializer, FHIRDeserializationError,
     deserialize_care_plan, deserialize_care_team, deserialize_goal,
     deserialize_service_request, deserialize_nutrition_order,

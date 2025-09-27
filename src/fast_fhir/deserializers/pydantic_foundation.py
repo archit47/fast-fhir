@@ -372,6 +372,52 @@ class RelatedPersonModel(FHIRDomainResource):
     period: Optional[Period] = None
     communication: Optional[List[RelatedPersonCommunication]] = None
 
+# Group-related enums and classes
+class GroupType(str, Enum):
+    PERSON = "person"
+    ANIMAL = "animal"
+    PRACTITIONER = "practitioner"
+    DEVICE = "device"
+    MEDICATION = "medication"
+    SUBSTANCE = "substance"
+
+class GroupMembershipBasis(str, Enum):
+    DEFINITIONAL = "definitional"
+    ENUMERATED = "enumerated"
+
+class GroupCharacteristic(BaseModel):
+    """Group characteristic"""
+    code: CodeableConcept
+    valueCodeableConcept: Optional[CodeableConcept] = None
+    valueBoolean: Optional[bool] = None
+    valueQuantity: Optional[dict] = None  # Quantity
+    valueRange: Optional[dict] = None     # Range
+    valueReference: Optional[Reference] = None
+    exclude: bool
+    period: Optional[Period] = None
+
+class GroupMember(BaseModel):
+    """Group member"""
+    entity: Reference
+    period: Optional[Period] = None
+    inactive: Optional[bool] = None
+
+class GroupModel(FHIRDomainResource):
+    """FHIR Group resource model"""
+    resourceType: str = Field(default="Group", const=True)
+    
+    identifier: Optional[List[Identifier]] = None
+    active: Optional[bool] = None
+    type: GroupType
+    membership: GroupMembershipBasis
+    code: Optional[CodeableConcept] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
+    quantity: Optional[int] = None
+    managingEntity: Optional[Reference] = None
+    characteristic: Optional[List[GroupCharacteristic]] = None
+    member: Optional[List[GroupMember]] = None
+
 # Export all models
 __all__ = [
     'HAS_PYDANTIC',
@@ -381,6 +427,7 @@ __all__ = [
     'EncounterModel',
     'PersonModel',
     'RelatedPersonModel',
+    'GroupModel',
     # Supporting classes
     'HumanName',
     'ContactPoint',
@@ -389,6 +436,8 @@ __all__ = [
     'Reference',
     'CodeableConcept',
     'Period',
+    'GroupCharacteristic',
+    'GroupMember',
     # Enums
     'AdministrativeGender',
     'NameUse',
@@ -396,5 +445,7 @@ __all__ = [
     'ContactPointUse',
     'AddressUse',
     'AddressType',
-    'EncounterStatus'
+    'EncounterStatus',
+    'GroupType',
+    'GroupMembershipBasis'
 ]

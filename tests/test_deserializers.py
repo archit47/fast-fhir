@@ -8,7 +8,11 @@ import unittest
 import json
 from datetime import datetime
 
-from src.fhir.deserializers import (
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+from fast_fhir.deserializers import (
     FHIRCareProvisionDeserializer, FHIRDeserializationError,
     deserialize_care_provision_resource,
     deserialize_care_plan, deserialize_care_team, deserialize_goal,
@@ -16,13 +20,13 @@ from src.fhir.deserializers import (
     deserialize_risk_assessment, deserialize_vision_prescription
 )
 
-from src.fhir.resources.care_plan import CarePlan, CarePlanStatus, CarePlanIntent
-from src.fhir.resources.care_team import CareTeam, CareTeamStatus
-from src.fhir.resources.goal import Goal, GoalLifecycleStatus
-from src.fhir.resources.service_request import ServiceRequest, ServiceRequestStatus, ServiceRequestIntent, ServiceRequestPriority
-from src.fhir.resources.nutrition_order import NutritionOrder, NutritionOrderStatus, NutritionOrderIntent
-from src.fhir.resources.risk_assessment import RiskAssessment, RiskAssessmentStatus
-from src.fhir.resources.vision_prescription import VisionPrescription, VisionPrescriptionStatus, VisionEye
+from fast_fhir.resources.care_plan import CarePlan, CarePlanStatus, CarePlanIntent
+from fast_fhir.resources.care_team import CareTeam, CareTeamStatus
+from fast_fhir.resources.goal import Goal, GoalLifecycleStatus
+from fast_fhir.resources.service_request import ServiceRequest, ServiceRequestStatus, ServiceRequestIntent, ServiceRequestPriority
+from fast_fhir.resources.nutrition_order import NutritionOrder, NutritionOrderStatus, NutritionOrderIntent
+from fast_fhir.resources.risk_assessment import RiskAssessment, RiskAssessmentStatus
+from fast_fhir.resources.vision_prescription import VisionPrescription, VisionPrescriptionStatus, VisionEye
 
 
 class TestFHIRCareProvisionDeserializer(unittest.TestCase):

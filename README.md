@@ -32,7 +32,7 @@ print(f"Patient: {patient.name[0].given[0]} {patient.name[0].family}")
 - **Foundation Resources**: Patient, Practitioner, PractitionerRole, Encounter, Person, RelatedPerson
 - **Care Provision Resources**: CarePlan, CareTeam, Goal, ServiceRequest, RiskAssessment
 - **Clinical Resources**: Observation, Condition, Procedure, DiagnosticReport
-- **Administrative Resources**: Organization, Location, HealthcareService
+- **Entities Resources**: Organization, Location, HealthcareService
 - **24+ implemented resource types** with 128+ total planned
 
 ### **Advanced Parsing Features**
@@ -267,7 +267,7 @@ parser = FHIRParser(
 | **Foundation** | Patient, Practitioner, PractitionerRole, Encounter, Person, RelatedPerson | ✅ **Complete** |
 | **Care Provision** | CarePlan, CareTeam, Goal, ServiceRequest, RiskAssessment, VisionPrescription, NutritionOrder | ✅ **Complete** |
 | **Clinical** | Observation, Condition, Procedure, DiagnosticReport, Medication | 🚧 **In Progress** |
-| **Administrative** | Organization, Location, HealthcareService, Schedule, Slot | 🚧 **In Progress** |
+| **Entities** | Organization, Location, HealthcareService, Schedule, Slot | 🚧 **In Progress** |
 | **Financial** | Coverage, Claim, ExplanationOfBenefit, Invoice | 📋 **Planned** |
 
 **Total: 24+ implemented, 128+ planned for complete FHIR R5 coverage**

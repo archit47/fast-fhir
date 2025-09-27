@@ -44,7 +44,24 @@ from .foundation_deserializers import (
     deserialize_practitioner_role,
     deserialize_encounter,
     deserialize_person,
-    deserialize_related_person
+    deserialize_related_person,
+    deserialize_group
+)
+
+# Import entities deserializer functionality
+from .entities_deserializers import (
+    FHIREntitiesDeserializer,
+    FHIREntitiesDeserializationError,
+    deserialize_organization,
+    deserialize_location,
+    deserialize_healthcare_service,
+    deserialize_endpoint,
+    deserialize_device,
+    deserialize_substance,
+    deserialize_organization_affiliation,
+    deserialize_biologically_derived_product,
+    deserialize_nutrition_product,
+    deserialize_device_metric
 )
 
 # Import Pydantic models for care provision resources
@@ -71,6 +88,7 @@ try:
         EncounterModel,
         PersonModel,
         RelatedPersonModel,
+        GroupModel,
         HumanName,
         ContactPoint,
         Address,
@@ -82,6 +100,27 @@ try:
     PYDANTIC_FOUNDATION_AVAILABLE = True
 except ImportError:
     PYDANTIC_FOUNDATION_AVAILABLE = False
+
+# Import Pydantic models for entities resources
+try:
+    from .pydantic_entities import (
+        OrganizationModel,
+        LocationModel,
+        HealthcareServiceModel,
+        EndpointModel,
+        DeviceModel,
+        SubstanceModel,
+        OrganizationAffiliationModel,
+        OrganizationContact,
+        LocationPosition,
+        DeviceUdiCarrier,
+        OrganizationType,
+        LocationStatus,
+        DeviceStatus
+    )
+    PYDANTIC_ENTITIES_AVAILABLE = True
+except ImportError:
+    PYDANTIC_ENTITIES_AVAILABLE = False
 
 # Import general Pydantic models
 try:
@@ -97,14 +136,17 @@ except ImportError:
 # Overall Pydantic availability
 PYDANTIC_AVAILABLE = (PYDANTIC_CARE_PROVISION_AVAILABLE or 
                      PYDANTIC_FOUNDATION_AVAILABLE or 
+                     PYDANTIC_ENTITIES_AVAILABLE or
                      PYDANTIC_GENERAL_AVAILABLE)
 
 __all__ = [
     # Core deserializers
     'FHIRCareProvisionDeserializer',
     'FHIRFoundationDeserializer',
+    'FHIREntitiesDeserializer',
     'FHIRDeserializationError',
     'FHIRFoundationDeserializationError',
+    'FHIREntitiesDeserializationError',
     
     # Care provision convenience functions
     'deserialize_care_provision_resource',
@@ -123,11 +165,25 @@ __all__ = [
     'deserialize_encounter',
     'deserialize_person',
     'deserialize_related_person',
+    'deserialize_group',
+    
+    # Entities convenience functions
+    'deserialize_organization',
+    'deserialize_location',
+    'deserialize_healthcare_service',
+    'deserialize_endpoint',
+    'deserialize_device',
+    'deserialize_substance',
+    'deserialize_organization_affiliation',
+    'deserialize_biologically_derived_product',
+    'deserialize_nutrition_product',
+    'deserialize_device_metric',
     
     # Pydantic availability flags
     'PYDANTIC_AVAILABLE',
     'PYDANTIC_CARE_PROVISION_AVAILABLE',
     'PYDANTIC_FOUNDATION_AVAILABLE',
+    'PYDANTIC_ENTITIES_AVAILABLE',
     'PYDANTIC_GENERAL_AVAILABLE'
 ]
 
@@ -152,6 +208,7 @@ if PYDANTIC_FOUNDATION_AVAILABLE:
         'EncounterModel',
         'PersonModel',
         'RelatedPersonModel',
+        'GroupModel',
         'HumanName',
         'ContactPoint',
         'Address',
@@ -159,6 +216,24 @@ if PYDANTIC_FOUNDATION_AVAILABLE:
         'Reference',
         'CodeableConcept',
         'AdministrativeGender'
+    ])
+
+# Add Entities Pydantic models to __all__ if available
+if PYDANTIC_ENTITIES_AVAILABLE:
+    __all__.extend([
+        'OrganizationModel',
+        'LocationModel',
+        'HealthcareServiceModel',
+        'EndpointModel',
+        'DeviceModel',
+        'SubstanceModel',
+        'OrganizationAffiliationModel',
+        'OrganizationContact',
+        'LocationPosition',
+        'DeviceUdiCarrier',
+        'OrganizationType',
+        'LocationStatus',
+        'DeviceStatus'
     ])
 
 # Add General Pydantic models to __all__ if available

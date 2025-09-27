@@ -10,7 +10,7 @@ from datetime import datetime, date
 from .pydantic_foundation import (
     HAS_PYDANTIC,
     PatientModel, PractitionerModel, PractitionerRoleModel,
-    EncounterModel, PersonModel, RelatedPersonModel
+    EncounterModel, PersonModel, RelatedPersonModel, GroupModel
 )
 
 # Import the actual FHIR resource classes (these would need to be implemented)
@@ -21,6 +21,7 @@ try:
     from ..resources.encounter import Encounter
     from ..resources.person import Person
     from ..resources.related_person import RelatedPerson
+    from ..resources.group import Group
 except ImportError:
     # Fallback classes if resource classes aren't implemented yet
     class Patient:
@@ -49,6 +50,11 @@ except ImportError:
                 setattr(self, key, value)
     
     class RelatedPerson:
+        def __init__(self, **kwargs):
+            for key, value in kwargs.items():
+                setattr(self, key, value)
+    
+    class Group:
         def __init__(self, **kwargs):
             for key, value in kwargs.items():
                 setattr(self, key, value)
@@ -148,7 +154,8 @@ class FHIRFoundationDeserializer:
             'PractitionerRole': (PractitionerRoleModel, PractitionerRole),
             'Encounter': (EncounterModel, Encounter),
             'Person': (PersonModel, Person),
-            'RelatedPerson': (RelatedPersonModel, RelatedPerson)
+            'RelatedPerson': (RelatedPersonModel, RelatedPerson),
+            'Group': (GroupModel, Group)
         }
     
     def deserialize_foundation_resource(self, json_data: Union[str, Dict[str, Any]], 
@@ -297,6 +304,10 @@ class FHIRFoundationDeserializer:
     def deserialize_related_person(self, json_data: Union[str, Dict[str, Any]]) -> RelatedPerson:
         """Deserialize a RelatedPerson resource"""
         return self.deserialize_foundation_resource(json_data, 'RelatedPerson')
+    
+    def deserialize_group(self, json_data: Union[str, Dict[str, Any]]) -> Group:
+        """Deserialize a Group resource"""
+        return self.deserialize_foundation_resource(json_data, 'Group')
 
 
 # Convenience functions for direct use
@@ -396,6 +407,22 @@ def deserialize_related_person(json_data: Union[str, Dict[str, Any]],
     return deserializer.deserialize_related_person(json_data)
 
 
+def deserialize_group(json_data: Union[str, Dict[str, Any]], 
+                     use_pydantic_validation: bool = True) -> Group:
+    """
+    Convenience function to deserialize a Group resource
+    
+    Args:
+        json_data: JSON string or dictionary containing Group resource
+        use_pydantic_validation: Whether to use Pydantic validation
+        
+    Returns:
+        Group resource object
+    """
+    deserializer = FHIRFoundationDeserializer(use_pydantic_validation)
+    return deserializer.deserialize_group(json_data)
+
+
 # Export all functions and classes
 __all__ = [
     'FHIRFoundationDeserializer',
@@ -405,5 +432,6 @@ __all__ = [
     'deserialize_practitioner_role',
     'deserialize_encounter',
     'deserialize_person',
-    'deserialize_related_person'
+    'deserialize_related_person',
+    'deserialize_group'
 ]

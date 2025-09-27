@@ -5,8 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "fast-fhir"
 version = "0.1.0"
-description = "Lightning-fast FHIR R5 parser with C extensions - 100x faster JSON parsing for healthcare data"
-authors = [{name = "Archit Kapoor"}]
+description = "High-performance FHIR R5 parser and validator for SMART on FHIR applications - Fast JSON deserialization with Pydantic validation for healthcare interoperability"
+authors = [{name = "Archit Kapoor", email = "archit47@users.noreply.github.com"}]
+maintainers = [{name = "Archit Kapoor", email = "archit47@users.noreply.github.com"}]
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.8"
@@ -14,20 +15,43 @@ dependencies = [
     "pkgconfig>=1.5.0",
     "pydantic>=1.8.0,<2.0.0",
 ]
-keywords = ["fhir", "parser", "healthcare", "hl7", "json", "performance", "fast", "c-extensions", "medical", "interoperability"]
+keywords = [
+    "fhir", "fhir-r5", "smart-on-fhir", "parser", "healthcare", "hl7", "json", 
+    "performance", "fast", "c-extensions", "medical", "interoperability", 
+    "validation", "deserializer", "ehr", "epic", "cerner", "allscripts", 
+    "clinical-data", "patient-data", "healthcare-integration", "fhir-client",
+    "fhir-server", "healthcare-api", "medical-records", "health-informatics"
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: Healthcare Industry",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: C",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Database :: Front-Ends",
+    "Topic :: System :: Archiving :: Packaging",
+    "Topic :: Text Processing :: Markup :: JSON",
+    "Environment :: Web Environment",
+    "Framework :: FastAPI",
+    "Framework :: Django",
+    "Framework :: Flask",
+    "Natural Language :: English",
+    "Typing :: Typed",
 ]
 
 [project.urls]
@@ -35,6 +59,10 @@ Homepage = "https://github.com/archit47/fast-fhir"
 Repository = "https://github.com/archit47/fast-fhir"
 Documentation = "https://github.com/archit47/fast-fhir#readme"
 "Bug Tracker" = "https://github.com/archit47/fast-fhir/issues"
+"Benchmarks" = "https://github.com/archit47/fast-fhir/blob/master/benchmarks/COMPARATIVE_RESULTS.md"
+"Examples" = "https://github.com/archit47/fast-fhir/tree/master/examples"
+"FHIR R5 Specification" = "https://hl7.org/fhir/R5/"
+"SMART on FHIR" = "https://smarthealthit.org/"
 
 [project.optional-dependencies]
 dev = [
@@ -44,6 +72,24 @@ dev = [
     "mypy>=0.950",
     "build>=0.8.0",
     "twine>=4.0.0",
+]
+benchmarks = [
+    "pytest>=7.0.0",
+    "fhir.resources>=8.0.0",
+]
+validation = [
+    "pydantic>=1.8.0,<2.0.0",
+]
+smart-on-fhir = [
+    "requests>=2.25.0",
+    "httpx>=0.20.0",
+]
+all = [
+    "pytest>=7.0.0",
+    "fhir.resources>=8.0.0", 
+    "pydantic>=1.8.0,<2.0.0",
+    "requests>=2.25.0",
+    "httpx>=0.20.0",
 ]
 
 [tool.black]

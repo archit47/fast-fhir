@@ -1,7 +1,7 @@
 /**
  * @file fhir_careteam.h
  * @brief FHIR R5 CareTeam resource C interface with OOP principles
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  * 
  * The Care Team includes all the people and organizations who plan to participate in the coordination and delivery of care

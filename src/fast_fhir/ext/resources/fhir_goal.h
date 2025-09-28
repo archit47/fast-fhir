@@ -1,7 +1,7 @@
 /**
  * @file fhir_goal.h
  * @brief FHIR R5 Goal resource C interface with OOP principles
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  * 
  * Describes the intended objective(s) for a patient, group or organization care

@@ -1,7 +1,7 @@
 /**
  * @file fhir_biologically_derived_product.h
  * @brief FHIR R5 BiologicallyDerivedProduct resource C interface
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  * 
  * This header defines the C interface for the FHIR R5 BiologicallyDerivedProduct resource.

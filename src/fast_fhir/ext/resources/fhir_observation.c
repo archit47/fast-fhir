@@ -1,7 +1,7 @@
 /**
  * @file fhir_observation.c
  * @brief FHIR R5 Observation resource C implementation with OOP principles
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  */
 

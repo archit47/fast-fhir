@@ -383,7 +383,7 @@ PyMODINIT_FUNC PyInit_fhir_new_resources_c(void) {
     }
     
     // Add module constants
-    PyModule_AddStringConstant(module, "__version__", "1.0.0");
+    PyModule_AddStringConstant(module, "__version__", "0.1.0");
     PyModule_AddStringConstant(module, "__author__", "FHIR Implementation Team");
     
     return module;

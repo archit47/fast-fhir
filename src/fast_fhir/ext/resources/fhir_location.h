@@ -1,7 +1,7 @@
 /**
  * @file fhir_location.h
  * @brief FHIR R5 Location resource C interface with OOP principles
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  * 
  * Details and position information for a physical place

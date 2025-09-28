@@ -287,7 +287,7 @@ Each resource module follows a consistent pattern:
 /**
  * @file fhir_resource_name.h
  * @brief FHIR R5 ResourceName resource C interface
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  */
 

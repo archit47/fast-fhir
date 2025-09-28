@@ -1,7 +1,7 @@
 /**
  * @file fhir_encounter.h
  * @brief FHIR R5 Encounter resource C interface with OOP principles
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  */
 

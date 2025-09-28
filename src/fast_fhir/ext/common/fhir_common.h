@@ -1,7 +1,7 @@
 /**
  * @file fhir_common.h
  * @brief Common utilities and helper functions for FHIR C implementation
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  * 
  * This header provides common utilities, error handling, and helper functions

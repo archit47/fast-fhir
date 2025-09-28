@@ -96,7 +96,7 @@ def generate_header_file(resource_name: str, resource_info: Dict) -> str:
     header = f'''/**
  * @file fhir_{resource_name.lower()}.h
  * @brief FHIR R5 {resource_name} resource C interface with OOP principles
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  * 
  * {resource_info["description"]}
@@ -248,7 +248,7 @@ def generate_implementation_file(resource_name: str, resource_info: Dict) -> str
     impl = f'''/**
  * @file fhir_{resource_name.lower()}.c
  * @brief FHIR R5 {resource_name} resource C implementation with OOP principles
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  */
 

@@ -1,7 +1,7 @@
 /**
  * @file fhir_riskassessment.h
  * @brief FHIR R5 RiskAssessment resource C interface with OOP principles
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  * 
  * An assessment of the likely outcome(s) for a patient or other subject as well as the likelihood of each outcome

@@ -1,7 +1,7 @@
 /**
  * @file fhir_resource_base.c
  * @brief Base resource system implementation with OOP principles
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  */
 

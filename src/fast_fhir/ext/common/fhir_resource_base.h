@@ -1,7 +1,7 @@
 /**
  * @file fhir_resource_base.h
  * @brief Base resource system with OOP principles for FHIR C extensions
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  * 
  * This header defines the base resource system implementing Object-Oriented

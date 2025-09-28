@@ -1,7 +1,7 @@
 /**
  * @file fhir_observation.h
  * @brief FHIR R5 Observation resource C interface with OOP principles
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  * 
  * Measurements and simple assertions made about a patient, device or other subject

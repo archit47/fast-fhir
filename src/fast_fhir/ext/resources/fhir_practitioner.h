@@ -1,7 +1,7 @@
 /**
  * @file fhir_practitioner.h
  * @brief FHIR R5 Practitioner resource C interface with OOP principles
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  */
 

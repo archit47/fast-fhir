@@ -1,7 +1,7 @@
 /**
  * @file test_framework.h
  * @brief Simple test framework for FHIR C extensions
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  * 
  * A lightweight test framework for C code following best practices.

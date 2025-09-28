@@ -1,7 +1,7 @@
 /**
  * @file fhir_careplan.h
  * @brief FHIR R5 CarePlan resource C interface with OOP principles
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  * 
  * Describes the intention of how one or more practitioners intend to deliver care for a particular patient, group or community

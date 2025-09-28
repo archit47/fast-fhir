@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fast-fhir"
-version = "1.0.0"
+version = "0.1.0"
 description = "High-performance FHIR R5 parser and validator for SMART on FHIR applications - Fast JSON deserialization with Pydantic validation for healthcare interoperability"
 authors = [{name = "Archit Kapoor", email = "archit47@users.noreply.github.com"}]
 maintainers = [{name = "Archit Kapoor", email = "archit47@users.noreply.github.com"}]

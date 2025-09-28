@@ -1,6 +1,6 @@
 """Fast-FHIR: High-performance FHIR R5 parser and processor with C extensions."""
 
-__version__ = "1.0.0"
+__version__ = "0.1.0"
 __fhir_version__ = "5.0.0"
 
 # Import main functionality for easy access

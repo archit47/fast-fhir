@@ -1,7 +1,7 @@
 /**
  * @file fhir_visionprescription.h
  * @brief FHIR R5 VisionPrescription resource C interface with OOP principles
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  * 
  * An authorization for the provision of glasses and/or contact lenses to a patient

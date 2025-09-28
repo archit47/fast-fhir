@@ -1,7 +1,7 @@
 /**
  * @file fhir_organization_affiliation.c
  * @brief FHIR R5 OrganizationAffiliation resource C implementation
- * @version 1.0.0
+ * @version 0.1.0
  * @date 2024-01-01
  * 
  * Implementation of FHIR R5 OrganizationAffiliation resource following

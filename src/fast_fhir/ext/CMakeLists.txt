@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.12)
 project(fhir_c_extensions 
-    VERSION 1.0.0
+    VERSION 0.1.0
     DESCRIPTION "FHIR R5 C Extensions"
     LANGUAGES C)
 

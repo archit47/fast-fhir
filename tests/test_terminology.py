@@ -2,11 +2,11 @@
 
 import json
 import pytest
-from src.fhir.terminology import (
+from fast_fhir.terminology import (
     FHIRCodeSystem, FHIRValueSet, FHIRConceptMap, FHIRBinary, FHIRBundle,
     is_terminology_resource
 )
-from src.fhir.foundation import HAS_C_FOUNDATION
+from fast_fhir.resources.base import HAS_C_FOUNDATION
 
 
 class TestFHIRCodeSystem:

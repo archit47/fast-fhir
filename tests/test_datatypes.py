@@ -2,11 +2,10 @@
 
 import json
 import pytest
-from src.fhir.datatypes import (
+from fast_fhir.datatypes import (
     FHIRString, FHIRBoolean, FHIRInteger, FHIRDecimal,
     FHIRCoding, FHIRCodeableConcept, FHIRQuantity, FHIRIdentifier, FHIRReference,
-    validate_date, validate_time, validate_uri, validate_code,
-    HAS_C_DATATYPES
+    validate_date, validate_time, validate_uri, validate_code, HAS_C_DATATYPES
 )
 
 

@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Care Provision resources (CarePlan, CareTeam, Goal, etc.)
   - Entities resources (Location, Device, Substance, etc.)
 - Comprehensive deserializer system with optional Pydantic validation
-- C extension support for enhanced performance (optional)
+- **C extensions**: 3 compiled extensions (fhir_parser_c, fhir_datatypes_c, fhir_foundation_c) for enhanced performance
 - Python 3.8+ compatibility
 - Pydantic v1.8+ and v2.x compatibility
 - Extensive test coverage (60+ tests)

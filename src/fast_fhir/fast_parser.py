@@ -61,6 +61,10 @@ class FastFHIRParser(FHIRParser):
                 data = json.loads(data)
             resource_type = data.get('resourceType')
         
+        # Check if resourceType is missing
+        if not resource_type:
+            raise ValueError("Missing resourceType")
+        
         # Use parent class logic for resource creation
         resource_class = self.RESOURCE_TYPES.get(resource_type)
         if not resource_class:

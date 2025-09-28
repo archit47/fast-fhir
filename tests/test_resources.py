@@ -2,10 +2,14 @@
 
 import json
 import pytest
-from src.fhir.resources import (
-    Patient, Practitioner, PractitionerRole, RelatedPerson,
-    Organization, Encounter, Group, Person
-)
+from fast_fhir.resources.patient import Patient
+from fast_fhir.resources.practitioner import Practitioner
+from fast_fhir.resources.practitioner_role import PractitionerRole
+from fast_fhir.resources.related_person import RelatedPerson
+from fast_fhir.resources.organization import Organization
+from fast_fhir.resources.encounter import Encounter
+from fast_fhir.resources.group import Group
+from fast_fhir.resources.person import Person
 
 
 class TestPatient:

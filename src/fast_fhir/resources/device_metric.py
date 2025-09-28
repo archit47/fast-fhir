@@ -10,8 +10,9 @@ class DeviceMetric(FHIRResourceBase):
     def __init__(self, id: Optional[str] = None, use_c_extensions: bool = True):
         """Initialize DeviceMetric resource."""
         super().__init__("DeviceMetric", id, use_c_extensions)
-        
-        # DeviceMetric-specific attributes
+    
+    def _init_resource_fields(self) -> None:
+        """Initialize DeviceMetric-specific fields."""
         self.type: Optional[Dict[str, Any]] = None
         self.unit: Optional[Dict[str, Any]] = None
         self.source: Optional[Dict[str, Any]] = None
@@ -22,11 +23,21 @@ class DeviceMetric(FHIRResourceBase):
         self.measurement_period: Optional[Dict[str, Any]] = None
         self.calibration: List[Dict[str, Any]] = []
     
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert DeviceMetric to dictionary representation."""
-        result = super().to_dict()
-        
-        # Add DeviceMetric-specific fields
+    def _get_c_extension_create_function(self) -> Optional[str]:
+        """Get the C extension create function name."""
+        return "create_device_metric"
+    
+    def _get_c_extension_parse_function(self) -> Optional[str]:
+        """Get the C extension parse function name."""
+        return "parse_device_metric"
+    
+    @classmethod
+    def _get_c_extension_parse_function_static(cls) -> Optional[str]:
+        """Static version of _get_c_extension_parse_function."""
+        return "parse_device_metric"
+    
+    def _add_resource_specific_fields(self, result: Dict[str, Any]) -> None:
+        """Add DeviceMetric-specific fields to the result dictionary."""
         if self.type:
             result["type"] = self.type
         if self.unit:
@@ -45,55 +56,45 @@ class DeviceMetric(FHIRResourceBase):
             result["measurementPeriod"] = self.measurement_period
         if self.calibration:
             result["calibration"] = self.calibration
-        
-        return result
     
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'DeviceMetric':
-        """Create DeviceMetric from dictionary representation."""
-        instance = cls(data.get("id"))
-        instance._populate_from_dict(data)
-        
-        # Set DeviceMetric-specific fields
-        instance.type = data.get("type")
-        instance.unit = data.get("unit")
-        instance.source = data.get("source")
-        instance.parent = data.get("parent")
-        instance.operational_status = data.get("operationalStatus")
-        instance.color = data.get("color")
-        instance.category = data.get("category")
-        instance.measurement_period = data.get("measurementPeriod")
-        instance.calibration = data.get("calibration", [])
-        
-        return instance
+    def _parse_resource_specific_fields(self, data: Dict[str, Any]) -> None:
+        """Parse DeviceMetric-specific fields from data dictionary."""
+        self.type = data.get("type")
+        self.unit = data.get("unit")
+        self.source = data.get("source")
+        self.parent = data.get("parent")
+        self.operational_status = data.get("operationalStatus")
+        self.color = data.get("color")
+        self.category = data.get("category")
+        self.measurement_period = data.get("measurementPeriod")
+        self.calibration = data.get("calibration", [])
     
-    def validate(self) -> List[str]:
-        """Validate DeviceMetric resource."""
-        errors = super().validate()
-        
-        # DeviceMetric-specific validation
-        if not self.type:
-            errors.append("DeviceMetric.type is required")
-        
-        if not self.category:
-            errors.append("DeviceMetric.category is required")
+    def _validate_resource_specific(self) -> bool:
+        """Perform DeviceMetric-specific validation."""
+        # DeviceMetric requires type and category
+        if not self.type or not self.category:
+            return False
         
         # Validate operational status values
         valid_operational_statuses = ["on", "off", "standby", "entered-in-error"]
         if self.operational_status and self.operational_status not in valid_operational_statuses:
-            errors.append(f"DeviceMetric.operationalStatus must be one of: {', '.join(valid_operational_statuses)}")
+            return False
         
         # Validate color values
         valid_colors = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"]
         if self.color and self.color not in valid_colors:
-            errors.append(f"DeviceMetric.color must be one of: {', '.join(valid_colors)}")
+            return False
         
         # Validate category values
         valid_categories = ["measurement", "setting", "calculation", "unspecified"]
         if self.category and self.category not in valid_categories:
-            errors.append(f"DeviceMetric.category must be one of: {', '.join(valid_categories)}")
+            return False
         
-        return errors
+        return True
+    
+
+    
+
     
     def is_operational(self) -> bool:
         """Check if the device metric is operational (on)."""

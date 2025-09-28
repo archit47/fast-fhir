@@ -88,22 +88,6 @@ class OrganizationAffiliation(FHIRResourceBase):
         
         return True
     
-    def validate(self) -> List[str]:
-        """Validate OrganizationAffiliation resource and return list of errors."""
-        errors = []
-        
-        # Basic validation
-        if not self.resource_type:
-            errors.append("Resource type is required")
-        
-        # OrganizationAffiliation-specific validation
-        if not self.organization:
-            errors.append("OrganizationAffiliation.organization is required")
-        
-        if not self.participating_organization:
-            errors.append("OrganizationAffiliation.participatingOrganization is required")
-        
-        return errors
     
     def is_active(self) -> bool:
         """Check if the organization affiliation is active."""

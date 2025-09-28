@@ -8,15 +8,15 @@ import unittest
 import json
 from datetime import datetime
 
-from src.fhir.resources.care_plan import CarePlan, CarePlanStatus, CarePlanIntent, CarePlanActivity
-from src.fhir.resources.care_team import CareTeam, CareTeamStatus, CareTeamParticipant
-from src.fhir.resources.goal import Goal, GoalLifecycleStatus, GoalTarget
-from src.fhir.resources.service_request import ServiceRequest, ServiceRequestStatus, ServiceRequestIntent, ServiceRequestPriority
-from src.fhir.resources.nutrition_order import NutritionOrder, NutritionOrderStatus, NutritionOrderIntent
-from src.fhir.resources.risk_assessment import RiskAssessment, RiskAssessmentStatus, RiskAssessmentPrediction
-from src.fhir.resources.vision_prescription import VisionPrescription, VisionPrescriptionStatus, VisionEye, VisionPrescriptionLensSpecification
+from fast_fhir.resources.care_plan import CarePlan, CarePlanStatus, CarePlanIntent, CarePlanActivity
+from fast_fhir.resources.care_team import CareTeam, CareTeamStatus, CareTeamParticipant
+from fast_fhir.resources.goal import Goal, GoalLifecycleStatus, GoalTarget
+from fast_fhir.resources.service_request import ServiceRequest, ServiceRequestStatus, ServiceRequestPriority, ServiceRequestIntent
+from fast_fhir.resources.nutrition_order import NutritionOrder, NutritionOrderStatus, NutritionOrderIntent
+from fast_fhir.resources.risk_assessment import RiskAssessment, RiskAssessmentStatus, RiskAssessmentPrediction
+from fast_fhir.resources.vision_prescription import VisionPrescription, VisionPrescriptionStatus, VisionPrescriptionLensSpecification, VisionEye
 
-from src.fhir.datatypes import (
+from fast_fhir.datatypes import (
     FHIRString, FHIRReference, FHIRCodeableConcept, FHIRDateTime, 
     FHIRPeriod, FHIRDecimal, FHIRBoolean, FHIRInteger
 )

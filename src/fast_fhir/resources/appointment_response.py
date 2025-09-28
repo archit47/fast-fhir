@@ -10,7 +10,9 @@ class AppointmentResponse(FHIRResourceBase):
     def __init__(self, id: Optional[str] = None, use_c_extensions: bool = True):
         """Initialize AppointmentResponse resource."""
         super().__init__("AppointmentResponse", id, use_c_extensions)
-        
+    
+    def _init_resource_fields(self) -> None:
+        """Initialize AppointmentResponse-specific fields."""
         # AppointmentResponse-specific attributes
         self.appointment: Optional[Dict[str, Any]] = None
         self.start: Optional[str] = None
@@ -22,7 +24,6 @@ class AppointmentResponse(FHIRResourceBase):
         self.recurring: Optional[bool] = None
         self.occurrence_date: Optional[str] = None
         self.occurrence_count: Optional[int] = None
-    
     def to_dict(self) -> Dict[str, Any]:
         """Convert AppointmentResponse to dictionary representation."""
         result = super().to_dict()
@@ -51,43 +52,7 @@ class AppointmentResponse(FHIRResourceBase):
         
         return result
     
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'AppointmentResponse':
-        """Create AppointmentResponse from dictionary representation."""
-        instance = cls(data.get("id"))
-        instance._populate_from_dict(data)
-        
-        # Set AppointmentResponse-specific fields
-        instance.appointment = data.get("appointment")
-        instance.start = data.get("start")
-        instance.end = data.get("end")
-        instance.participant_type = data.get("participantType", [])
-        instance.actor = data.get("actor")
-        instance.participant_status = data.get("participantStatus")
-        instance.comment = data.get("comment")
-        instance.recurring = data.get("recurring")
-        instance.occurrence_date = data.get("occurrenceDate")
-        instance.occurrence_count = data.get("occurrenceCount")
-        
-        return instance
     
-    def validate(self) -> List[str]:
-        """Validate AppointmentResponse resource."""
-        errors = super().validate()
-        
-        # AppointmentResponse-specific validation
-        if not self.appointment:
-            errors.append("AppointmentResponse.appointment is required")
-        
-        if not self.participant_status:
-            errors.append("AppointmentResponse.participantStatus is required")
-        
-        # Validate participant status values
-        valid_statuses = ["accepted", "declined", "tentative", "needs-action"]
-        if self.participant_status and self.participant_status not in valid_statuses:
-            errors.append(f"AppointmentResponse.participantStatus must be one of: {', '.join(valid_statuses)}")
-        
-        return errors
     
     def is_accepted(self) -> bool:
         """Check if the appointment response is accepted."""
@@ -174,3 +139,30 @@ class AppointmentResponse(FHIRResourceBase):
     def set_occurrence_count(self, count: int) -> None:
         """Set the occurrence count for recurring appointments."""
         self.occurrence_count = count
+    def _get_c_extension_create_function(self) -> Optional[str]:
+        """Get the C extension create function name."""
+        return "create_appointment_response"
+    
+    def _get_c_extension_parse_function(self) -> Optional[str]:
+        """Get the C extension parse function name."""
+        return "parse_appointment_response"
+    
+    @classmethod
+    def _get_c_extension_parse_function_static(cls) -> Optional[str]:
+        """Static version of _get_c_extension_parse_function."""
+        return "parse_appointment_response"
+    
+    def _add_resource_specific_fields(self, result: Dict[str, Any]) -> None:
+        """Add AppointmentResponse-specific fields to the result dictionary."""
+        # TODO: Implement resource-specific field serialization
+        pass
+    
+    def _parse_resource_specific_fields(self, data: Dict[str, Any]) -> None:
+        """Parse AppointmentResponse-specific fields from data dictionary."""
+        # TODO: Implement resource-specific field parsing
+        pass
+    
+    def _validate_resource_specific(self) -> bool:
+        """Perform AppointmentResponse-specific validation."""
+        # AppointmentResponse requires appointment and participant_status
+        return self.appointment is not None and self.participant_status is not None

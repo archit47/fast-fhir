@@ -2,10 +2,18 @@
 
 import json
 import pytest
-from src.fhir.resources import (
-    Location, Task, HealthcareService, Endpoint, Appointment, 
-    Slot, Schedule, Flag, Device, Substance, ListResource, Library
-)
+from fast_fhir.resources.location import Location
+from fast_fhir.resources.task import Task
+from fast_fhir.resources.healthcare_service import HealthcareService
+from fast_fhir.resources.endpoint import Endpoint
+from fast_fhir.resources.appointment import Appointment
+from fast_fhir.resources.slot import Slot
+from fast_fhir.resources.schedule import Schedule
+from fast_fhir.resources.flag import Flag
+from fast_fhir.resources.device import Device
+from fast_fhir.resources.substance import Substance
+from fast_fhir.resources.list_resource import ListResource
+from fast_fhir.resources.library import Library
 
 
 class TestLocation:

@@ -2,7 +2,7 @@
 
 import json
 import pytest
-from src.fhir.foundation import (
+from fast_fhir.foundation import (
     FHIRPatient, FHIRPractitioner, FHIROrganization,
     is_foundation_resource, get_resource_type, HAS_C_FOUNDATION
 )

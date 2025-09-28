@@ -246,7 +246,7 @@ class FHIRFoundationDeserializer:
         resource_id = data.get('id')
         
         # Create the resource instance
-        resource = resource_class(resource_type=resource_type, id=resource_id)
+        resource = resource_class(resource_type, resource_id)
         
         # Set all other fields as attributes
         self._set_resource_attributes(resource, data)

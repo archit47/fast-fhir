@@ -10,7 +10,9 @@ class EpisodeOfCare(FHIRResourceBase):
     def __init__(self, id: Optional[str] = None, use_c_extensions: bool = True):
         """Initialize EpisodeOfCare resource."""
         super().__init__("EpisodeOfCare", id, use_c_extensions)
-        
+    
+    def _init_resource_fields(self) -> None:
+        """Initialize EpisodeOfCare-specific fields."""
         # EpisodeOfCare-specific attributes
         self.status: Optional[str] = None  # planned | waitlist | active | onhold | finished | cancelled | entered-in-error
         self.status_history: List[Dict[str, Any]] = []
@@ -23,7 +25,6 @@ class EpisodeOfCare(FHIRResourceBase):
         self.care_manager: Optional[Dict[str, Any]] = None
         self.team: List[Dict[str, Any]] = []
         self.account: List[Dict[str, Any]] = []
-    
     def to_dict(self) -> Dict[str, Any]:
         """Convert EpisodeOfCare to dictionary representation."""
         result = super().to_dict()
@@ -54,44 +55,7 @@ class EpisodeOfCare(FHIRResourceBase):
         
         return result
     
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'EpisodeOfCare':
-        """Create EpisodeOfCare from dictionary representation."""
-        instance = cls(data.get("id"))
-        instance._populate_from_dict(data)
-        
-        # Set EpisodeOfCare-specific fields
-        instance.status = data.get("status")
-        instance.status_history = data.get("statusHistory", [])
-        instance.type = data.get("type", [])
-        instance.diagnosis = data.get("diagnosis", [])
-        instance.patient = data.get("patient")
-        instance.managing_organization = data.get("managingOrganization")
-        instance.period = data.get("period")
-        instance.referral_request = data.get("referralRequest", [])
-        instance.care_manager = data.get("careManager")
-        instance.team = data.get("team", [])
-        instance.account = data.get("account", [])
-        
-        return instance
     
-    def validate(self) -> List[str]:
-        """Validate EpisodeOfCare resource."""
-        errors = super().validate()
-        
-        # EpisodeOfCare-specific validation
-        if not self.status:
-            errors.append("EpisodeOfCare.status is required")
-        
-        if not self.patient:
-            errors.append("EpisodeOfCare.patient is required")
-        
-        # Validate status values
-        valid_statuses = ["planned", "waitlist", "active", "onhold", "finished", "cancelled", "entered-in-error"]
-        if self.status and self.status not in valid_statuses:
-            errors.append(f"EpisodeOfCare.status must be one of: {', '.join(valid_statuses)}")
-        
-        return errors
     
     def is_active(self) -> bool:
         """Check if the episode of care is active."""
@@ -232,3 +196,30 @@ class EpisodeOfCare(FHIRResourceBase):
                         matching_diagnoses.append(diagnosis)
                         break
         return matching_diagnoses
+    def _get_c_extension_create_function(self) -> Optional[str]:
+        """Get the C extension create function name."""
+        return "create_episode_of_care"
+    
+    def _get_c_extension_parse_function(self) -> Optional[str]:
+        """Get the C extension parse function name."""
+        return "parse_episode_of_care"
+    
+    @classmethod
+    def _get_c_extension_parse_function_static(cls) -> Optional[str]:
+        """Static version of _get_c_extension_parse_function."""
+        return "parse_episode_of_care"
+    
+    def _add_resource_specific_fields(self, result: Dict[str, Any]) -> None:
+        """Add EpisodeOfCare-specific fields to the result dictionary."""
+        # TODO: Implement resource-specific field serialization
+        pass
+    
+    def _parse_resource_specific_fields(self, data: Dict[str, Any]) -> None:
+        """Parse EpisodeOfCare-specific fields from data dictionary."""
+        # TODO: Implement resource-specific field parsing
+        pass
+    
+    def _validate_resource_specific(self) -> bool:
+        """Perform EpisodeOfCare-specific validation."""
+        # EpisodeOfCare requires status and patient
+        return self.status is not None and self.patient is not None

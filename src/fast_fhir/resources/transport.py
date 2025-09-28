@@ -10,7 +10,9 @@ class Transport(FHIRResourceBase):
     def __init__(self, id: Optional[str] = None, use_c_extensions: bool = True):
         """Initialize Transport resource."""
         super().__init__("Transport", id, use_c_extensions)
-        
+    
+    def _init_resource_fields(self) -> None:
+        """Initialize Transport-specific fields."""
         # Transport-specific attributes
         self.instantiates_canonical: Optional[str] = None
         self.instantiates_uri: Optional[str] = None
@@ -44,7 +46,6 @@ class Transport(FHIRResourceBase):
         self.reason_code: Optional[Dict[str, Any]] = None
         self.reason_reference: Optional[Dict[str, Any]] = None
         self.history: Optional[Dict[str, Any]] = None
-    
     def to_dict(self) -> Dict[str, Any]:
         """Convert Transport to dictionary representation."""
         result = super().to_dict()
@@ -117,77 +118,7 @@ class Transport(FHIRResourceBase):
         
         return result
     
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Transport':
-        """Create Transport from dictionary representation."""
-        instance = cls(data.get("id"))
-        instance._populate_from_dict(data)
-        
-        # Set Transport-specific fields
-        instance.instantiates_canonical = data.get("instantiatesCanonical")
-        instance.instantiates_uri = data.get("instantiatesUri")
-        instance.based_on = data.get("basedOn", [])
-        instance.group_identifier = data.get("groupIdentifier")
-        instance.part_of = data.get("partOf", [])
-        instance.status = data.get("status")
-        instance.status_reason = data.get("statusReason")
-        instance.intent = data.get("intent")
-        instance.priority = data.get("priority")
-        instance.code = data.get("code")
-        instance.description = data.get("description")
-        instance.focus = data.get("focus")
-        instance.for_reference = data.get("for")
-        instance.encounter = data.get("encounter")
-        instance.completion_time = data.get("completionTime")
-        instance.authored_on = data.get("authoredOn")
-        instance.last_modified = data.get("lastModified")
-        instance.requester = data.get("requester")
-        instance.performer_type = data.get("performerType")
-        instance.owner = data.get("owner")
-        instance.location = data.get("location")
-        instance.insurance = data.get("insurance", [])
-        instance.note = data.get("note", [])
-        instance.relevant_history = data.get("relevantHistory", [])
-        instance.restriction = data.get("restriction")
-        instance.input = data.get("input", [])
-        instance.output = data.get("output", [])
-        instance.requested_location = data.get("requestedLocation")
-        instance.current_location = data.get("currentLocation")
-        instance.reason_code = data.get("reasonCode")
-        instance.reason_reference = data.get("reasonReference")
-        instance.history = data.get("history")
-        
-        return instance
     
-    def validate(self) -> List[str]:
-        """Validate Transport resource."""
-        errors = super().validate()
-        
-        # Transport-specific validation
-        if not self.status:
-            errors.append("Transport.status is required")
-        
-        if not self.intent:
-            errors.append("Transport.intent is required")
-        
-        # Validate status values
-        valid_statuses = ["draft", "requested", "received", "accepted", "rejected", 
-                         "in-progress", "completed", "cancelled", "entered-in-error"]
-        if self.status and self.status not in valid_statuses:
-            errors.append(f"Transport.status must be one of: {', '.join(valid_statuses)}")
-        
-        # Validate intent values
-        valid_intents = ["unknown", "proposal", "plan", "order", "original-order", 
-                        "reflex-order", "filler-order", "instance-order", "option"]
-        if self.intent and self.intent not in valid_intents:
-            errors.append(f"Transport.intent must be one of: {', '.join(valid_intents)}")
-        
-        # Validate priority values
-        valid_priorities = ["routine", "urgent", "asap", "stat"]
-        if self.priority and self.priority not in valid_priorities:
-            errors.append(f"Transport.priority must be one of: {', '.join(valid_priorities)}")
-        
-        return errors
     
     def is_completed(self) -> bool:
         """Check if the transport is completed."""
@@ -241,3 +172,30 @@ class Transport(FHIRResourceBase):
     def add_note(self, note: Dict[str, Any]) -> None:
         """Add a note."""
         self.note.append(note)
+    def _get_c_extension_create_function(self) -> Optional[str]:
+        """Get the C extension create function name."""
+        return "create_transport"
+    
+    def _get_c_extension_parse_function(self) -> Optional[str]:
+        """Get the C extension parse function name."""
+        return "parse_transport"
+    
+    @classmethod
+    def _get_c_extension_parse_function_static(cls) -> Optional[str]:
+        """Static version of _get_c_extension_parse_function."""
+        return "parse_transport"
+    
+    def _add_resource_specific_fields(self, result: Dict[str, Any]) -> None:
+        """Add Transport-specific fields to the result dictionary."""
+        # TODO: Implement resource-specific field serialization
+        pass
+    
+    def _parse_resource_specific_fields(self, data: Dict[str, Any]) -> None:
+        """Parse Transport-specific fields from data dictionary."""
+        # TODO: Implement resource-specific field parsing
+        pass
+    
+    def _validate_resource_specific(self) -> bool:
+        """Perform Transport-specific validation."""
+        # Transport requires status and intent
+        return self.status is not None and self.intent is not None

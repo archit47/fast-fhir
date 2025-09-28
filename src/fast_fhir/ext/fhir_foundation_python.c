@@ -2,6 +2,16 @@
 #include <Python.h>
 #include "fhir_foundation.h"
 
+// Forward declarations for Python wrapper functions
+static PyObject* py_fhir_code_system_create(PyObject* self, PyObject* args);
+static PyObject* py_fhir_parse_code_system(PyObject* self, PyObject* args);
+static PyObject* py_fhir_value_set_create(PyObject* self, PyObject* args);
+static PyObject* py_fhir_binary_create(PyObject* self, PyObject* args);
+static PyObject* py_fhir_bundle_create(PyObject* self, PyObject* args);
+static PyObject* py_fhir_parse_bundle(PyObject* self, PyObject* args);
+static PyObject* py_fhir_bundle_get_entry_count(PyObject* self, PyObject* args);
+static PyObject* py_fhir_is_terminology_resource(PyObject* self, PyObject* args);
+
 // Python wrapper functions for FHIR Foundation resources
 
 // Patient resource functions
@@ -417,8 +427,7 @@ static struct PyModuleDef fhir_foundation_module = {
 PyMODINIT_FUNC PyInit_fhir_foundation_c(void) {
     return PyModule_Create(&fhir_foundation_module);
 }
-//
- Additional Python wrapper functions for new Foundation resources
+// Additional Python wrapper functions for new Foundation resources
 
 // CodeSystem resource functions
 static PyObject* py_fhir_code_system_create(PyObject* self, PyObject* args) {
@@ -823,8 +832,9 @@ static PyObject* py_fhir_is_terminology_resource(PyObject* self, PyObject* args)
     
     bool is_terminology = fhir_is_terminology_resource(resource_type);
     return PyBool_FromLong(is_terminology);
-}// Ad
-ditional Python wrapper functions for new Foundation resources
+}
+
+// Additional Python wrapper functions for new Foundation resources
 
 // Location resource functions
 static PyObject* py_fhir_location_create(PyObject* self, PyObject* args) {
@@ -892,7 +902,7 @@ static PyObject* py_fhir_task_create(PyObject* self, PyObject* args) {
         return NULL;
     }
     
-    FHIRTask* task = fhir_task_create(id);
+    struct FHIRTask* task = fhir_task_create(id);
     if (!task) {
         PyErr_SetString(PyExc_MemoryError, "Failed to create FHIR Task");
         return NULL;

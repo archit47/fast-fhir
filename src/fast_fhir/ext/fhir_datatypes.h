@@ -479,4 +479,13 @@ void fhir_string_free(char* str);
 char** fhir_string_array_create(size_t size);
 void fhir_string_array_free(char** array, size_t size);
 
+// FHIR typed string utility functions
+void fhir_uri_free(FHIRUri* uri);
+void fhir_code_free(FHIRCode* code);
+void fhir_markdown_free(FHIRMarkdown* markdown);
+void fhir_datetime_free(FHIRDateTime* datetime);
+void fhir_instant_free(FHIRInstant* instant);
+void fhir_canonical_free(FHIRCanonical* canonical);
+void fhir_base64binary_free(FHIRBase64Binary* binary);
+
 #endif // FHIR_DATATYPES_H

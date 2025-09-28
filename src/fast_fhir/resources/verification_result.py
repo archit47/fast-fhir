@@ -10,7 +10,9 @@ class VerificationResult(FHIRResourceBase):
     def __init__(self, id: Optional[str] = None, use_c_extensions: bool = True):
         """Initialize VerificationResult resource."""
         super().__init__("VerificationResult", id, use_c_extensions)
-        
+    
+    def _init_resource_fields(self) -> None:
+        """Initialize VerificationResult-specific fields."""
         # VerificationResult-specific attributes
         self.target: List[Dict[str, Any]] = []
         self.target_location: List[str] = []
@@ -26,7 +28,6 @@ class VerificationResult(FHIRResourceBase):
         self.primary_source: List[Dict[str, Any]] = []
         self.attestation: Optional[Dict[str, Any]] = None
         self.validator: List[Dict[str, Any]] = []
-    
     def to_dict(self) -> Dict[str, Any]:
         """Convert VerificationResult to dictionary representation."""
         result = super().to_dict()
@@ -63,47 +64,7 @@ class VerificationResult(FHIRResourceBase):
         
         return result
     
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'VerificationResult':
-        """Create VerificationResult from dictionary representation."""
-        instance = cls(data.get("id"))
-        instance._populate_from_dict(data)
-        
-        # Set VerificationResult-specific fields
-        instance.target = data.get("target", [])
-        instance.target_location = data.get("targetLocation", [])
-        instance.need = data.get("need")
-        instance.status = data.get("status")
-        instance.status_date = data.get("statusDate")
-        instance.validation_type = data.get("validationType")
-        instance.validation_process = data.get("validationProcess", [])
-        instance.frequency = data.get("frequency")
-        instance.last_performed = data.get("lastPerformed")
-        instance.next_scheduled = data.get("nextScheduled")
-        instance.failure_action = data.get("failureAction")
-        instance.primary_source = data.get("primarySource", [])
-        instance.attestation = data.get("attestation")
-        instance.validator = data.get("validator", [])
-        
-        return instance
     
-    def validate(self) -> List[str]:
-        """Validate VerificationResult resource."""
-        errors = super().validate()
-        
-        # VerificationResult-specific validation
-        if not self.target:
-            errors.append("VerificationResult.target is required")
-        
-        if not self.status:
-            errors.append("VerificationResult.status is required")
-        
-        # Validate status values
-        valid_statuses = ["attested", "validated", "in-process", "req-revalid", "val-fail", "reval-fail"]
-        if self.status and self.status not in valid_statuses:
-            errors.append(f"VerificationResult.status must be one of: {', '.join(valid_statuses)}")
-        
-        return errors
     
     def is_validated(self) -> bool:
         """Check if the verification result is validated."""
@@ -215,3 +176,30 @@ class VerificationResult(FHIRResourceBase):
     def set_failure_action(self, action: Dict[str, Any]) -> None:
         """Set the failure action."""
         self.failure_action = action
+    def _get_c_extension_create_function(self) -> Optional[str]:
+        """Get the C extension create function name."""
+        return "create_verification_result"
+    
+    def _get_c_extension_parse_function(self) -> Optional[str]:
+        """Get the C extension parse function name."""
+        return "parse_verification_result"
+    
+    @classmethod
+    def _get_c_extension_parse_function_static(cls) -> Optional[str]:
+        """Static version of _get_c_extension_parse_function."""
+        return "parse_verification_result"
+    
+    def _add_resource_specific_fields(self, result: Dict[str, Any]) -> None:
+        """Add VerificationResult-specific fields to the result dictionary."""
+        # TODO: Implement resource-specific field serialization
+        pass
+    
+    def _parse_resource_specific_fields(self, data: Dict[str, Any]) -> None:
+        """Parse VerificationResult-specific fields from data dictionary."""
+        # TODO: Implement resource-specific field parsing
+        pass
+    
+    def _validate_resource_specific(self) -> bool:
+        """Perform VerificationResult-specific validation."""
+        # VerificationResult requires target and status
+        return self.target is not None and self.status is not None

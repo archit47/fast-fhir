@@ -71,19 +71,6 @@ class BiologicallyDerivedProduct(FHIRResourceBase):
             return False
         return True
     
-    def validate(self) -> List[str]:
-        """Validate BiologicallyDerivedProduct resource and return list of errors."""
-        errors = []
-        
-        # Basic validation
-        if not self.resource_type:
-            errors.append("Resource type is required")
-        
-        # BiologicallyDerivedProduct-specific validation
-        if not self.product_category:
-            errors.append("BiologicallyDerivedProduct.productCategory is required")
-        
-        return errors
     
     def get_product_category(self) -> Optional[Dict[str, Any]]:
         """Get the product category."""

@@ -7,6 +7,10 @@ from .base import FHIRResourceBase, validate_fhir_code
 class ListResource(FHIRResourceBase):
     """FHIR R5 List resource following DRY principles."""
     
+    def __init__(self, id: Optional[str] = None, use_c_extensions: bool = True):
+        """Initialize List resource."""
+        super().__init__("List", id, use_c_extensions)
+    
     def _init_resource_fields(self) -> None:
         """Initialize List-specific fields."""
         self.identifier = []

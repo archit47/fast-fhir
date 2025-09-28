@@ -9,7 +9,8 @@ class Observation(FHIRResource):
     
     def __init__(self, id: Optional[str] = None):
         """Initialize Observation resource."""
-        super().__init__('Observation', id)
+        super().__init__(id)
+        self.resource_type = 'Observation'
         self.identifier = []
         self.instantiates_canonical = []
         self.instantiates_reference = []
@@ -43,7 +44,15 @@ class Observation(FHIRResource):
     def from_dict(cls, data: Dict[str, Any]) -> 'Observation':
         """Create Observation from dictionary data."""
         observation = cls(data.get('id'))
-        observation._parse_meta(data)
+        
+        # Parse common fields
+        observation.meta = data.get('meta')
+        observation.implicit_rules = data.get('implicitRules')
+        observation.language = data.get('language')
+        observation.text = data.get('text')
+        observation.contained = data.get('contained', [])
+        observation.extension = data.get('extension', [])
+        observation.modifier_extension = data.get('modifierExtension', [])
         
         # Parse Observation-specific fields
         observation.identifier = data.get('identifier', [])

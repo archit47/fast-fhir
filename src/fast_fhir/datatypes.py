@@ -347,8 +347,31 @@ def validate_date(date_string: str) -> bool:
     
     # Python fallback validation
     import re
+    from datetime import datetime
+    
+    # Basic format check
     pattern = r'^\d{4}(-\d{2}(-\d{2})?)?$'
-    return bool(re.match(pattern, date_string))
+    if not re.match(pattern, date_string):
+        return False
+    
+    # Validate actual date values
+    try:
+        parts = date_string.split('-')
+        year = int(parts[0])
+        
+        if len(parts) >= 2:
+            month = int(parts[1])
+            if month < 1 or month > 12:
+                return False
+        
+        if len(parts) == 3:
+            day = int(parts[2])
+            # Use datetime to validate the full date
+            datetime(year, month, day)
+        
+        return True
+    except (ValueError, IndexError):
+        return False
 
 
 def validate_time(time_string: str) -> bool:
@@ -361,8 +384,38 @@ def validate_time(time_string: str) -> bool:
     
     # Python fallback validation
     import re
+    from datetime import time
+    
+    # Basic format check
     pattern = r'^\d{2}:\d{2}:\d{2}(\.\d{3})?$'
-    return bool(re.match(pattern, time_string))
+    if not re.match(pattern, time_string):
+        return False
+    
+    # Validate actual time values
+    try:
+        parts = time_string.split(':')
+        hour = int(parts[0])
+        minute = int(parts[1])
+        
+        # Handle seconds with optional milliseconds
+        second_part = parts[2]
+        if '.' in second_part:
+            second = int(second_part.split('.')[0])
+            millisecond = int(second_part.split('.')[1])
+            if millisecond >= 1000:
+                return False
+        else:
+            second = int(second_part)
+        
+        # Validate ranges
+        if hour > 23 or minute > 59 or second > 59:
+            return False
+        
+        # Use datetime.time to validate
+        time(hour, minute, second)
+        return True
+    except (ValueError, IndexError):
+        return False
 
 
 def validate_uri(uri_string: str) -> bool:

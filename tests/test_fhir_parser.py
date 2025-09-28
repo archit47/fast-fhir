@@ -2,9 +2,9 @@
 
 import json
 import pytest
-from src.fhir.parser import FHIRParser
-from src.fhir.resources.patient import Patient
-from src.fhir.resources.observation import Observation
+from fast_fhir.parser import FHIRParser
+from fast_fhir.resources.patient import Patient
+from fast_fhir.resources.observation import Observation
 
 
 class TestFHIRParser:

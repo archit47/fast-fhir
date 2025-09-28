@@ -14,11 +14,10 @@ struct FHIRSignature;
 struct FHIRTask;
 struct FHIRCodeSystem;
 
-// Typedef declarations for forward-declared structs
-typedef struct FHIRUsageContext FHIRUsageContext;
-typedef struct FHIRSignature FHIRSignature;
-typedef struct FHIRTask FHIRTask;
-typedef struct FHIRCodeSystem FHIRCodeSystem;
+// Forward declarations for structs
+struct FHIRUsageContext;
+struct FHIRSignature;
+struct FHIRTask;
 
 // Base Resource structure
 typedef struct FHIRResource {
@@ -537,7 +536,7 @@ typedef struct {
     FHIRContactDetail** contact;
     size_t contact_count;
     FHIRMarkdown* description;
-    FHIRUsageContext** use_context;
+    struct FHIRUsageContext** use_context;
     size_t use_context_count;
     FHIRCodeableConcept** jurisdiction;
     size_t jurisdiction_count;
@@ -629,7 +628,7 @@ typedef struct {
     FHIRContactDetail** contact;
     size_t contact_count;
     FHIRMarkdown* description;
-    FHIRUsageContext** use_context;
+    struct FHIRUsageContext** use_context;
     size_t use_context_count;
     FHIRCodeableConcept** jurisdiction;
     size_t jurisdiction_count;
@@ -754,7 +753,7 @@ typedef struct {
     FHIRContactDetail** contact;
     size_t contact_count;
     FHIRMarkdown* description;
-    FHIRUsageContext** use_context;
+    struct FHIRUsageContext** use_context;
     size_t use_context_count;
     FHIRCodeableConcept** jurisdiction;
     size_t jurisdiction_count;
@@ -839,7 +838,7 @@ typedef struct {
     size_t link_count;
     struct BundleEntry** entry;
     size_t entry_count;
-    FHIRSignature* signature;
+    struct FHIRSignature* signature;
 } FHIRBundle;
 
 // Bundle Link structure
@@ -903,7 +902,7 @@ typedef struct {
     size_t value_reference_count;
 } FHIRUsageContext;
 
-typedef struct {
+typedef struct FHIRSignature {
     FHIRElement base;
     FHIRCode* type;  // xml-signature | json-signature | proof-signature
     FHIRInstant* when;
@@ -960,8 +959,9 @@ bool fhir_bundle_add_entry(FHIRBundle* bundle, FHIRResource* resource, const cha
 bool fhir_is_terminology_resource(const char* resource_type);
 char* fhir_code_system_lookup_display(const FHIRCodeSystem* code_system, const char* code);
 bool fhir_value_set_contains_code(const FHIRValueSet* value_set, const char* system, const char* code);
-char* fhir_concept_map_translate(const FHIRConceptMap* concept_map, const char* source_system, const char* code);/
-/ Additional Foundation Resource declarations for new resources
+char* fhir_concept_map_translate(const FHIRConceptMap* concept_map, const char* source_system, const char* code);
+
+// Additional Foundation Resource declarations for new resources
 
 // Location functions (already declared above, but ensuring completeness)
 FHIRLocation* fhir_location_create(const char* id);
@@ -971,11 +971,11 @@ cJSON* fhir_location_to_json(const FHIRLocation* location);
 bool fhir_validate_location(const FHIRLocation* location);
 
 // Task functions
-FHIRTask* fhir_task_create(const char* id);
-void fhir_task_free(FHIRTask* task);
-FHIRTask* fhir_parse_task(cJSON* json);
-cJSON* fhir_task_to_json(const FHIRTask* task);
-bool fhir_validate_task(const FHIRTask* task);
+struct FHIRTask* fhir_task_create(const char* id);
+void fhir_task_free(struct FHIRTask* task);
+struct FHIRTask* fhir_parse_task(cJSON* json);
+cJSON* fhir_task_to_json(const struct FHIRTask* task);
+bool fhir_validate_task(const struct FHIRTask* task);
 
 // HealthcareService functions (already declared above)
 FHIRHealthcareService* fhir_healthcare_service_create(const char* id);

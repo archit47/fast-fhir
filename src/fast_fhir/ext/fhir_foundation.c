@@ -29,8 +29,14 @@ void fhir_resource_free(FHIRResource* resource) {
             // Free meta structure
             free(resource->meta);
         }
-        fhir_string_free(resource->implicit_rules);
-        fhir_string_free(resource->language);
+        if (resource->implicit_rules) {
+            fhir_string_free(resource->implicit_rules->value);
+            free(resource->implicit_rules);
+        }
+        if (resource->language) {
+            fhir_string_free(resource->language->value);
+            free(resource->language);
+        }
         free(resource);
     }
 }
@@ -116,10 +122,19 @@ void fhir_patient_free(FHIRPatient* patient) {
         
         // Free other fields
         if (patient->active) free(patient->active);
-        fhir_string_free(patient->gender);
-        fhir_string_free(patient->birth_date);
+        if (patient->gender) {
+            fhir_string_free(patient->gender->value);
+            free(patient->gender);
+        }
+        if (patient->birth_date) {
+            fhir_string_free(patient->birth_date->value);
+            free(patient->birth_date);
+        }
         if (patient->deceased_boolean) free(patient->deceased_boolean);
-        fhir_string_free(patient->deceased_date_time);
+        if (patient->deceased_date_time) {
+            fhir_string_free(patient->deceased_date_time->value);
+            free(patient->deceased_date_time);
+        }
         if (patient->marital_status) free(patient->marital_status);
         if (patient->multiple_birth_boolean) free(patient->multiple_birth_boolean);
         if (patient->multiple_birth_integer) free(patient->multiple_birth_integer);
@@ -193,13 +208,19 @@ FHIRPatient* fhir_parse_patient(cJSON* json) {
     // Parse gender
     cJSON* gender = cJSON_GetObjectItemCaseSensitive(json, "gender");
     if (cJSON_IsString(gender)) {
-        patient->gender = fhir_string_duplicate(gender->valuestring);
+        patient->gender = calloc(1, sizeof(FHIRCode));
+        if (patient->gender) {
+            patient->gender->value = fhir_string_duplicate(gender->valuestring);
+        }
     }
     
     // Parse birthDate
     cJSON* birth_date = cJSON_GetObjectItemCaseSensitive(json, "birthDate");
     if (cJSON_IsString(birth_date)) {
-        patient->birth_date = fhir_string_duplicate(birth_date->valuestring);
+        patient->birth_date = calloc(1, sizeof(FHIRDate));
+        if (patient->birth_date) {
+            patient->birth_date->value = fhir_string_duplicate(birth_date->valuestring);
+        }
     }
     
     // Parse name array
@@ -297,13 +318,13 @@ cJSON* fhir_patient_to_json(const FHIRPatient* patient) {
     }
     
     // Add gender
-    if (patient->gender) {
-        cJSON_AddStringToObject(json, "gender", patient->gender);
+    if (patient->gender && patient->gender->value) {
+        cJSON_AddStringToObject(json, "gender", patient->gender->value);
     }
     
     // Add birthDate
-    if (patient->birth_date) {
-        cJSON_AddStringToObject(json, "birthDate", patient->birth_date);
+    if (patient->birth_date && patient->birth_date->value) {
+        cJSON_AddStringToObject(json, "birthDate", patient->birth_date->value);
     }
     
     // Add name array
@@ -389,8 +410,14 @@ void fhir_practitioner_free(FHIRPractitioner* practitioner) {
         
         // Free other fields
         if (practitioner->active) free(practitioner->active);
-        fhir_string_free(practitioner->gender);
-        fhir_string_free(practitioner->birth_date);
+        if (practitioner->gender) {
+            fhir_string_free(practitioner->gender->value);
+            free(practitioner->gender);
+        }
+        if (practitioner->birth_date) {
+            fhir_string_free(practitioner->birth_date->value);
+            free(practitioner->birth_date);
+        }
         
         // Free qualifications
         if (practitioner->qualification) {
@@ -428,11 +455,25 @@ void fhir_organization_free(FHIROrganization* organization) {
         
         // Free other fields
         if (organization->active) free(organization->active);
-        fhir_string_free(organization->name);
-        fhir_string_free(organization->description);
+        if (organization->name) {
+            fhir_string_free(organization->name->value);
+            free(organization->name);
+        }
+        if (organization->description) {
+            fhir_string_free(organization->description->value);
+            free(organization->description);
+        }
         
         // Free aliases
-        fhir_string_array_free(organization->alias, organization->alias_count);
+        if (organization->alias) {
+            for (size_t i = 0; i < organization->alias_count; i++) {
+                if (organization->alias[i]) {
+                    fhir_string_free(organization->alias[i]->value);
+                    free(organization->alias[i]);
+                }
+            }
+            free(organization->alias);
+        }
         
         free(organization);
     }
@@ -527,7 +568,7 @@ bool fhir_validate_patient(const FHIRPatient* patient) {
         const char* valid_genders[] = {"male", "female", "other", "unknown"};
         bool valid_gender = false;
         for (int i = 0; i < 4; i++) {
-            if (strcmp(patient->gender, valid_genders[i]) == 0) {
+            if (patient->gender && patient->gender->value && strcmp(patient->gender->value, valid_genders[i]) == 0) {
                 valid_gender = true;
                 break;
             }
@@ -536,7 +577,7 @@ bool fhir_validate_patient(const FHIRPatient* patient) {
     }
     
     // Validate birthDate format if present
-    if (patient->birth_date && !fhir_validate_date(patient->birth_date)) {
+    if (patient->birth_date && patient->birth_date->value && !fhir_validate_date(patient->birth_date->value)) {
         return false;
     }
     
@@ -564,8 +605,7 @@ bool fhir_is_foundation_resource(const char* resource_type) {
     
     return false;
 }
-// Add
-itional Foundation Resource implementations
+// Additional Foundation Resource implementations
 
 // CodeSystem Resource functions
 FHIRCodeSystem* fhir_code_system_create(const char* id) {
@@ -581,24 +621,24 @@ void fhir_code_system_free(FHIRCodeSystem* code_system) {
     if (code_system) {
         fhir_domain_resource_free(&code_system->domain_resource);
         
-        fhir_string_free(code_system->url);
-        fhir_string_free(code_system->version);
-        fhir_string_free(code_system->name);
-        fhir_string_free(code_system->title);
-        fhir_string_free(code_system->status);
+        fhir_uri_free(code_system->url);
+        fhir_string_free((char*)code_system->version);
+        fhir_string_free((char*)code_system->name);
+        fhir_string_free((char*)code_system->title);
+        fhir_code_free(code_system->status);
         if (code_system->experimental) free(code_system->experimental);
-        fhir_string_free(code_system->date);
-        fhir_string_free(code_system->publisher);
-        fhir_string_free(code_system->description);
-        fhir_string_free(code_system->purpose);
-        fhir_string_free(code_system->copyright);
+        fhir_datetime_free(code_system->date);
+        fhir_string_free((char*)code_system->publisher);
+        fhir_markdown_free(code_system->description);
+        fhir_markdown_free(code_system->purpose);
+        fhir_markdown_free(code_system->copyright);
         if (code_system->case_sensitive) free(code_system->case_sensitive);
-        fhir_string_free(code_system->value_set);
-        fhir_string_free(code_system->hierarchy_meaning);
+        fhir_canonical_free(code_system->value_set);
+        fhir_code_free(code_system->hierarchy_meaning);
         if (code_system->compositional) free(code_system->compositional);
         if (code_system->version_needed) free(code_system->version_needed);
-        fhir_string_free(code_system->content);
-        fhir_string_free(code_system->supplements);
+        fhir_code_free(code_system->content);
+        fhir_canonical_free(code_system->supplements);
         if (code_system->count) free(code_system->count);
         
         // Free identifiers
@@ -646,32 +686,32 @@ FHIRCodeSystem* fhir_parse_code_system(cJSON* json) {
     // Parse basic fields
     cJSON* url = cJSON_GetObjectItemCaseSensitive(json, "url");
     if (cJSON_IsString(url)) {
-        code_system->url = fhir_string_duplicate(url->valuestring);
+        code_system->url = (FHIRUri*)fhir_string_duplicate(url->valuestring);
     }
     
     cJSON* version = cJSON_GetObjectItemCaseSensitive(json, "version");
     if (cJSON_IsString(version)) {
-        code_system->version = fhir_string_duplicate(version->valuestring);
+        code_system->version = (FHIRString*)fhir_string_duplicate(version->valuestring);
     }
     
     cJSON* name = cJSON_GetObjectItemCaseSensitive(json, "name");
     if (cJSON_IsString(name)) {
-        code_system->name = fhir_string_duplicate(name->valuestring);
+        code_system->name = (FHIRString*)fhir_string_duplicate(name->valuestring);
     }
     
     cJSON* title = cJSON_GetObjectItemCaseSensitive(json, "title");
     if (cJSON_IsString(title)) {
-        code_system->title = fhir_string_duplicate(title->valuestring);
+        code_system->title = (FHIRString*)fhir_string_duplicate(title->valuestring);
     }
     
     cJSON* status = cJSON_GetObjectItemCaseSensitive(json, "status");
     if (cJSON_IsString(status)) {
-        code_system->status = fhir_string_duplicate(status->valuestring);
+        code_system->status = (FHIRCode*)fhir_string_duplicate(status->valuestring);
     }
     
     cJSON* content = cJSON_GetObjectItemCaseSensitive(json, "content");
     if (cJSON_IsString(content)) {
-        code_system->content = fhir_string_duplicate(content->valuestring);
+        code_system->content = (FHIRCode*)fhir_string_duplicate(content->valuestring);
     }
     
     return code_system;
@@ -690,27 +730,27 @@ cJSON* fhir_code_system_to_json(const FHIRCodeSystem* code_system) {
     }
     
     if (code_system->url) {
-        cJSON_AddStringToObject(json, "url", code_system->url);
+        cJSON_AddStringToObject(json, "url", (const char*)code_system->url);
     }
     
     if (code_system->version) {
-        cJSON_AddStringToObject(json, "version", code_system->version);
+        cJSON_AddStringToObject(json, "version", (const char*)code_system->version);
     }
     
     if (code_system->name) {
-        cJSON_AddStringToObject(json, "name", code_system->name);
+        cJSON_AddStringToObject(json, "name", (const char*)code_system->name);
     }
     
     if (code_system->title) {
-        cJSON_AddStringToObject(json, "title", code_system->title);
+        cJSON_AddStringToObject(json, "title", (const char*)code_system->title);
     }
     
     if (code_system->status) {
-        cJSON_AddStringToObject(json, "status", code_system->status);
+        cJSON_AddStringToObject(json, "status", (const char*)code_system->status);
     }
     
     if (code_system->content) {
-        cJSON_AddStringToObject(json, "content", code_system->content);
+        cJSON_AddStringToObject(json, "content", (const char*)code_system->content);
     }
     
     return json;
@@ -1122,22 +1162,4 @@ bool fhir_is_terminology_resource(const char* resource_type) {
     return false;
 }
 
-// Update the foundation resource detection function
-bool fhir_is_foundation_resource(const char* resource_type) {
-    if (!resource_type) return false;
-    
-    const char* foundation_types[] = {
-        "Patient", "Practitioner", "PractitionerRole", "Organization", 
-        "Location", "HealthcareService", "Endpoint", "RelatedPerson", 
-        "Person", "Group", "CodeSystem", "ValueSet", "ConceptMap", 
-        "Binary", "Bundle"
-    };
-    
-    for (int i = 0; i < 15; i++) {
-        if (strcmp(resource_type, foundation_types[i]) == 0) {
-            return true;
-        }
-    }
-    
-    return false;
-}
+// Duplicate function removed

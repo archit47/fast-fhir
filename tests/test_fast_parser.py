@@ -2,8 +2,8 @@
 
 import json
 import pytest
-from src.fhir.fast_parser import FastFHIRParser
-from src.fhir.resources.patient import Patient
+from fast_fhir.fast_parser import FastFHIRParser
+from fast_fhir.resources.patient import Patient
 
 
 class TestFastFHIRParser:

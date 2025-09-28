@@ -5,15 +5,15 @@ import json
 from datetime import datetime
 from typing import Dict, Any
 
-from src.fhir.resources.organization_affiliation import OrganizationAffiliation
-from src.fhir.resources.biologically_derived_product import BiologicallyDerivedProduct
-from src.fhir.resources.device_metric import DeviceMetric
-from src.fhir.resources.nutrition_product import NutritionProduct
-from src.fhir.resources.transport import Transport
-from src.fhir.resources.appointment_response import AppointmentResponse
-from src.fhir.resources.verification_result import VerificationResult
-from src.fhir.resources.encounter_history import EncounterHistory
-from src.fhir.resources.episode_of_care import EpisodeOfCare
+from fast_fhir.resources.organization_affiliation import OrganizationAffiliation
+from fast_fhir.resources.biologically_derived_product import BiologicallyDerivedProduct
+from fast_fhir.resources.device_metric import DeviceMetric
+from fast_fhir.resources.nutrition_product import NutritionProduct
+from fast_fhir.resources.transport import Transport
+from fast_fhir.resources.appointment_response import AppointmentResponse
+from fast_fhir.resources.verification_result import VerificationResult
+from fast_fhir.resources.encounter_history import EncounterHistory
+from fast_fhir.resources.episode_of_care import EpisodeOfCare
 
 
 class TestOrganizationAffiliation:
@@ -33,16 +33,16 @@ class TestOrganizationAffiliation:
         org_affiliation = OrganizationAffiliation("test-org-affiliation-1")
         
         # Should fail validation without required fields
-        errors = org_affiliation.validate()
-        assert "OrganizationAffiliation.organization is required" in errors
-        assert "OrganizationAffiliation.participatingOrganization is required" in errors
+        is_valid = org_affiliation.validate()
+        assert not is_valid
+        assert not is_valid
         
         # Add required fields
         org_affiliation.organization = {"reference": "Organization/main-org"}
         org_affiliation.participating_organization = {"reference": "Organization/partner-org"}
         
-        errors = org_affiliation.validate()
-        assert len([e for e in errors if "organization" in e.lower()]) == 0
+        is_valid = org_affiliation.validate()
+        assert is_valid
     
     def test_organization_affiliation_methods(self):
         """Test OrganizationAffiliation helper methods."""
@@ -98,14 +98,14 @@ class TestBiologicallyDerivedProduct:
         product = BiologicallyDerivedProduct("test-bio-product-1")
         
         # Should fail validation without required fields
-        errors = product.validate()
-        assert "BiologicallyDerivedProduct.productCategory is required" in errors
+        is_valid = product.validate()
+        assert not is_valid
         
         # Add required field
         product.product_category = {"coding": [{"code": "cells", "display": "Cells"}]}
         
-        errors = product.validate()
-        assert len([e for e in errors if "productCategory" in e]) == 0
+        is_valid = product.validate()
+        assert is_valid
     
     def test_biologically_derived_product_methods(self):
         """Test BiologicallyDerivedProduct helper methods."""
@@ -141,16 +141,14 @@ class TestDeviceMetric:
         metric = DeviceMetric("test-device-metric-1")
         
         # Should fail validation without required fields
-        errors = metric.validate()
-        assert "DeviceMetric.type is required" in errors
-        assert "DeviceMetric.category is required" in errors
+        assert not metric.validate()
         
         # Add required fields
         metric.type = {"coding": [{"code": "temp", "display": "Temperature"}]}
         metric.category = "measurement"
         
-        errors = metric.validate()
-        assert len([e for e in errors if "type is required" in e or "category is required" in e]) == 0
+        # Should pass validation with required fields
+        assert metric.validate()
     
     def test_device_metric_status_methods(self):
         """Test DeviceMetric status methods."""
@@ -197,14 +195,14 @@ class TestNutritionProduct:
         product = NutritionProduct("test-nutrition-product-1")
         
         # Should fail validation without required fields
-        errors = product.validate()
-        assert "NutritionProduct.status is required" in errors
+        is_valid = product.validate()
+        assert not is_valid
         
         # Add required field
         product.status = "active"
         
-        errors = product.validate()
-        assert len([e for e in errors if "status is required" in e]) == 0
+        is_valid = product.validate()
+        assert is_valid
     
     def test_nutrition_product_methods(self):
         """Test NutritionProduct helper methods."""
@@ -247,16 +245,16 @@ class TestTransport:
         transport = Transport("test-transport-1")
         
         # Should fail validation without required fields
-        errors = transport.validate()
-        assert "Transport.status is required" in errors
-        assert "Transport.intent is required" in errors
+        is_valid = transport.validate()
+        assert not is_valid
+        assert not is_valid
         
         # Add required fields
         transport.status = "in-progress"
         transport.intent = "order"
         
-        errors = transport.validate()
-        assert len([e for e in errors if "status is required" in e or "intent is required" in e]) == 0
+        is_valid = transport.validate()
+        assert is_valid
     
     def test_transport_status_methods(self):
         """Test Transport status methods."""
@@ -286,16 +284,16 @@ class TestAppointmentResponse:
         response = AppointmentResponse("test-appointment-response-1")
         
         # Should fail validation without required fields
-        errors = response.validate()
-        assert "AppointmentResponse.appointment is required" in errors
-        assert "AppointmentResponse.participantStatus is required" in errors
+        is_valid = response.validate()
+        assert not is_valid
+        assert not is_valid
         
         # Add required fields
         response.appointment = {"reference": "Appointment/123"}
         response.participant_status = "accepted"
         
-        errors = response.validate()
-        assert len([e for e in errors if "appointment is required" in e or "participantStatus is required" in e]) == 0
+        is_valid = response.validate()
+        assert is_valid
     
     def test_appointment_response_status_methods(self):
         """Test AppointmentResponse status methods."""
@@ -326,16 +324,16 @@ class TestVerificationResult:
         result = VerificationResult("test-verification-result-1")
         
         # Should fail validation without required fields
-        errors = result.validate()
-        assert "VerificationResult.target is required" in errors
-        assert "VerificationResult.status is required" in errors
+        is_valid = result.validate()
+        assert not is_valid
+        assert not is_valid
         
         # Add required fields
         result.target = [{"reference": "Practitioner/123"}]
         result.status = "validated"
         
-        errors = result.validate()
-        assert len([e for e in errors if "target is required" in e or "status is required" in e]) == 0
+        is_valid = result.validate()
+        assert is_valid
     
     def test_verification_result_status_methods(self):
         """Test VerificationResult status methods."""
@@ -367,11 +365,11 @@ class TestEncounterHistory:
         history = EncounterHistory("test-encounter-history-1")
         
         # Should fail validation without required fields
-        errors = history.validate()
-        assert "EncounterHistory.status is required" in errors
-        assert "EncounterHistory.class is required" in errors
-        assert "EncounterHistory.subject is required" in errors
-        assert "EncounterHistory.encounter is required" in errors
+        is_valid = history.validate()
+        assert not is_valid
+        assert not is_valid
+        assert not is_valid
+        assert not is_valid
         
         # Add required fields
         history.status = "completed"
@@ -379,9 +377,8 @@ class TestEncounterHistory:
         history.subject = {"reference": "Patient/123"}
         history.encounter = {"reference": "Encounter/456"}
         
-        errors = history.validate()
-        required_errors = [e for e in errors if "is required" in e and any(field in e for field in ["status", "class", "subject", "encounter"])]
-        assert len(required_errors) == 0
+        is_valid = history.validate()
+        assert is_valid
     
     def test_encounter_history_status_methods(self):
         """Test EncounterHistory status methods."""
@@ -412,16 +409,16 @@ class TestEpisodeOfCare:
         episode = EpisodeOfCare("test-episode-of-care-1")
         
         # Should fail validation without required fields
-        errors = episode.validate()
-        assert "EpisodeOfCare.status is required" in errors
-        assert "EpisodeOfCare.patient is required" in errors
+        is_valid = episode.validate()
+        assert not is_valid
+        assert not is_valid
         
         # Add required fields
         episode.status = "active"
         episode.patient = {"reference": "Patient/123"}
         
-        errors = episode.validate()
-        assert len([e for e in errors if "status is required" in e or "patient is required" in e]) == 0
+        is_valid = episode.validate()
+        assert is_valid
     
     def test_episode_of_care_status_methods(self):
         """Test EpisodeOfCare status methods."""
@@ -516,12 +513,10 @@ class TestResourceIntegration:
             # All resources should have validation method
             assert hasattr(resource, 'validate')
             
-            # Validation should return a list
-            errors = resource.validate()
-            assert isinstance(errors, list)
+            # Validation should return a boolean
+            is_valid = resource.validate()
+            assert isinstance(is_valid, bool)
             
-            # All should have base validation errors initially
-            base_errors = [e for e in errors if "id" in e or "resourceType" in e]
             # Note: Base validation might not require these fields, so we just check the method works
 
 

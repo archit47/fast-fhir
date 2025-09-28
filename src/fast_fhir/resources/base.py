@@ -14,10 +14,20 @@ except ImportError:
 class FHIRResourceBase(ABC):
     """Abstract base class for all FHIR resources implementing DRY principles."""
     
-    def __init__(self, resource_type: str, id: Optional[str] = None, use_c_extensions: bool = True):
+    def __init__(self, id_or_resource_type: Optional[str] = None, id: Optional[str] = None, use_c_extensions: bool = True):
         """Initialize base FHIR resource."""
+        # Determine resource_type and id based on arguments
+        if id is not None:
+            # Both arguments provided: first is resource_type, second is id
+            resource_type = id_or_resource_type or self.__class__.__name__
+            resource_id = id
+        else:
+            # Only first argument provided: it's the id, resource_type is class name
+            resource_type = self.__class__.__name__
+            resource_id = id_or_resource_type
+            
         self.resource_type = resource_type
-        self.id = id
+        self.id = resource_id
         self.use_c_extensions = use_c_extensions and HAS_C_FOUNDATION
         
         # Common DomainResource fields

@@ -10,7 +10,9 @@ class NutritionProduct(FHIRResourceBase):
     def __init__(self, id: Optional[str] = None, use_c_extensions: bool = True):
         """Initialize NutritionProduct resource."""
         super().__init__("NutritionProduct", id, use_c_extensions)
-        
+    
+    def _init_resource_fields(self) -> None:
+        """Initialize NutritionProduct-specific fields."""
         # NutritionProduct-specific attributes
         self.status: Optional[str] = None  # active | inactive | entered-in-error
         self.category: List[Dict[str, Any]] = []
@@ -22,7 +24,6 @@ class NutritionProduct(FHIRResourceBase):
         self.characteristic: List[Dict[str, Any]] = []
         self.instance: List[Dict[str, Any]] = []
         self.note: List[Dict[str, Any]] = []
-    
     def to_dict(self) -> Dict[str, Any]:
         """Convert NutritionProduct to dictionary representation."""
         result = super().to_dict()
@@ -51,40 +52,7 @@ class NutritionProduct(FHIRResourceBase):
         
         return result
     
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'NutritionProduct':
-        """Create NutritionProduct from dictionary representation."""
-        instance = cls(data.get("id"))
-        instance._populate_from_dict(data)
-        
-        # Set NutritionProduct-specific fields
-        instance.status = data.get("status")
-        instance.category = data.get("category", [])
-        instance.code = data.get("code")
-        instance.manufacturer = data.get("manufacturer")
-        instance.nutrient = data.get("nutrient", [])
-        instance.ingredient = data.get("ingredient", [])
-        instance.known_allergen = data.get("knownAllergen", [])
-        instance.characteristic = data.get("characteristic", [])
-        instance.instance = data.get("instance", [])
-        instance.note = data.get("note", [])
-        
-        return instance
     
-    def validate(self) -> List[str]:
-        """Validate NutritionProduct resource."""
-        errors = super().validate()
-        
-        # NutritionProduct-specific validation
-        if not self.status:
-            errors.append("NutritionProduct.status is required")
-        
-        # Validate status values
-        valid_statuses = ["active", "inactive", "entered-in-error"]
-        if self.status and self.status not in valid_statuses:
-            errors.append(f"NutritionProduct.status must be one of: {', '.join(valid_statuses)}")
-        
-        return errors
     
     def is_active(self) -> bool:
         """Check if the nutrition product is active."""
@@ -176,3 +144,30 @@ class NutritionProduct(FHIRResourceBase):
                     if coding.get("code") == allergen_code:
                         return True
         return False
+    def _get_c_extension_create_function(self) -> Optional[str]:
+        """Get the C extension create function name."""
+        return "create_nutrition_product"
+    
+    def _get_c_extension_parse_function(self) -> Optional[str]:
+        """Get the C extension parse function name."""
+        return "parse_nutrition_product"
+    
+    @classmethod
+    def _get_c_extension_parse_function_static(cls) -> Optional[str]:
+        """Static version of _get_c_extension_parse_function."""
+        return "parse_nutrition_product"
+    
+    def _add_resource_specific_fields(self, result: Dict[str, Any]) -> None:
+        """Add NutritionProduct-specific fields to the result dictionary."""
+        # TODO: Implement resource-specific field serialization
+        pass
+    
+    def _parse_resource_specific_fields(self, data: Dict[str, Any]) -> None:
+        """Parse NutritionProduct-specific fields from data dictionary."""
+        # TODO: Implement resource-specific field parsing
+        pass
+    
+    def _validate_resource_specific(self) -> bool:
+        """Perform NutritionProduct-specific validation."""
+        # NutritionProduct requires status
+        return self.status is not None

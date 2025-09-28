@@ -1,7 +1,7 @@
 """Tests for complete FHIR R5 resource system."""
 
 import pytest
-from src.fhir.all_resources import (
+from fast_fhir.all_resources import (
     FHIRResourceCategory, FHIRResourceRegistry, FHIRResourceFactory,
     get_all_fhir_resource_types, get_fhir_resource_categories,
     is_fhir_resource_implemented, get_fhir_implementation_status,

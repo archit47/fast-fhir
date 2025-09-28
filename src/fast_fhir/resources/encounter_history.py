@@ -10,7 +10,9 @@ class EncounterHistory(FHIRResourceBase):
     def __init__(self, id: Optional[str] = None, use_c_extensions: bool = True):
         """Initialize EncounterHistory resource."""
         super().__init__("EncounterHistory", id, use_c_extensions)
-        
+    
+    def _init_resource_fields(self) -> None:
+        """Initialize EncounterHistory-specific fields."""
         # EncounterHistory-specific attributes
         self.status: Optional[str] = None  # planned | in-progress | on-hold | discharged | completed | cancelled | discontinued | entered-in-error | unknown
         self.class_: Optional[Dict[str, Any]] = None  # 'class' is a reserved keyword, so using 'class_'
@@ -23,7 +25,6 @@ class EncounterHistory(FHIRResourceBase):
         self.planned_end_date: Optional[Dict[str, Any]] = None
         self.length: Optional[Dict[str, Any]] = None
         self.location: List[Dict[str, Any]] = []
-    
     def to_dict(self) -> Dict[str, Any]:
         """Convert EncounterHistory to dictionary representation."""
         result = super().to_dict()
@@ -54,51 +55,7 @@ class EncounterHistory(FHIRResourceBase):
         
         return result
     
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'EncounterHistory':
-        """Create EncounterHistory from dictionary representation."""
-        instance = cls(data.get("id"))
-        instance._populate_from_dict(data)
-        
-        # Set EncounterHistory-specific fields
-        instance.status = data.get("status")
-        instance.class_ = data.get("class")
-        instance.type = data.get("type")
-        instance.service_type = data.get("serviceType", [])
-        instance.subject = data.get("subject")
-        instance.encounter = data.get("encounter")
-        instance.actual_period = data.get("actualPeriod")
-        instance.planned_start_date = data.get("plannedStartDate")
-        instance.planned_end_date = data.get("plannedEndDate")
-        instance.length = data.get("length")
-        instance.location = data.get("location", [])
-        
-        return instance
     
-    def validate(self) -> List[str]:
-        """Validate EncounterHistory resource."""
-        errors = super().validate()
-        
-        # EncounterHistory-specific validation
-        if not self.status:
-            errors.append("EncounterHistory.status is required")
-        
-        if not self.class_:
-            errors.append("EncounterHistory.class is required")
-        
-        if not self.subject:
-            errors.append("EncounterHistory.subject is required")
-        
-        if not self.encounter:
-            errors.append("EncounterHistory.encounter is required")
-        
-        # Validate status values
-        valid_statuses = ["planned", "in-progress", "on-hold", "discharged", "completed", 
-                         "cancelled", "discontinued", "entered-in-error", "unknown"]
-        if self.status and self.status not in valid_statuses:
-            errors.append(f"EncounterHistory.status must be one of: {', '.join(valid_statuses)}")
-        
-        return errors
     
     def is_completed(self) -> bool:
         """Check if the encounter history is completed."""
@@ -206,3 +163,33 @@ class EncounterHistory(FHIRResourceBase):
     def add_location(self, location: Dict[str, Any]) -> None:
         """Add location information."""
         self.location.append(location)
+    def _get_c_extension_create_function(self) -> Optional[str]:
+        """Get the C extension create function name."""
+        return "create_encounter_history"
+    
+    def _get_c_extension_parse_function(self) -> Optional[str]:
+        """Get the C extension parse function name."""
+        return "parse_encounter_history"
+    
+    @classmethod
+    def _get_c_extension_parse_function_static(cls) -> Optional[str]:
+        """Static version of _get_c_extension_parse_function."""
+        return "parse_encounter_history"
+    
+    def _add_resource_specific_fields(self, result: Dict[str, Any]) -> None:
+        """Add EncounterHistory-specific fields to the result dictionary."""
+        # TODO: Implement resource-specific field serialization
+        pass
+    
+    def _parse_resource_specific_fields(self, data: Dict[str, Any]) -> None:
+        """Parse EncounterHistory-specific fields from data dictionary."""
+        # TODO: Implement resource-specific field parsing
+        pass
+    
+    def _validate_resource_specific(self) -> bool:
+        """Perform EncounterHistory-specific validation."""
+        # EncounterHistory requires status, class_, subject, and encounter
+        return (self.status is not None and 
+                self.class_ is not None and 
+                self.subject is not None and 
+                self.encounter is not None)
